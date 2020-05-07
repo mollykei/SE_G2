@@ -1,6 +1,7 @@
-Sistemas Embebidos - Grupo 2
-Integrantes:
-* Fernando Iglesias
-* Ignacio Carballeda
-* Katrine Poulsen
-* Matias Sambrizzi
+## Sistemas Embebidos - Grupo 2
+
+***Integrantes:***
+
+ - *Fernando Iglesias*
+ - *Ignacio Carballeda*
+ - *Katrine Poulsen*
