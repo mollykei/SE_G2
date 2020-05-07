@@ -1,4 +1,5 @@
-## Sistemas Embebidos - Grupo 2
+Sistemas Embebidos - Grupo 2
+==============
 
 ***Integrantes:***
 
