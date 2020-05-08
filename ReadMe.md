@@ -6,4 +6,4 @@ Sistemas Embebidos - Grupo 2
  - *Fernando Iglesias*
  - *Ignacio Carballeda*
  - *Katrine Poulsen*
- - ...
+ - *Matías Sambrizzi*
