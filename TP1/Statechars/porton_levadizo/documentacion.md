@@ -1,4 +1,4 @@
-# TP2: Portón Levadizo
+# TP1: Portón Levadizo
 ## Introducción 
 Se quiere realizar el modelo de control de un **portón levadizo** automatizado, utilizando máquinas de estado. Se cuentan con los siguientes componentes:
 ```
