@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:sgraph="http://www.yakindu.org/sct/sgraph/2.0.0">
-  <sgraph:Statechart xmi:id="_xK_40JIqEeqDCptTKJS1iw" specification="interface Porton:&#xA;//Eventos&#xA;in event evAbierto&#xA;in event evCerrado&#xA;in event evControlRemotoAbrir&#xA;in event evControlRemotoCerrar&#xA;in event evPresencia&#xA;in event evNoPresencia&#xA;//Acciones&#xA;operation opMotorGiro(&#xA;&#x9;Prender: boolean,&#xA;&#x9;Sentido: boolean&#xA;): void&#xA;operation opMotorQuieto() : boolean&#xA;operation opFrenarMotor() : void&#xA;operation opLedEstado(&#xA;&#x9;Prender: boolean,&#xA;&#x9;Color: integer&#xA;): void&#xA;//Constantes&#xA;const ON: boolean = true&#xA;const OFF: boolean = false&#xA;const ABRIR: boolean = true&#xA;const CERRAR: boolean = false&#xA;const LED_VERDE: integer  = 0&#xA;const LED_ROJO: integer = 1&#xA;//Variables&#xA;&#xA;internal:&#xA;//Señales internas&#xA;event siLedVerde&#xA;event siLedRojo&#xA;//Tiempo de prendido de los leds&#xA;var viMiliSegundos: integer = 500" name="porton_levadizo">
+  <sgraph:Statechart xmi:id="_xK_40JIqEeqDCptTKJS1iw" specification="interface Porton:&#xA;//Eventos&#xA;in event evAbierto&#xA;in event evCerrado&#xA;in event evControlRemotoAbrir&#xA;in event evControlRemotoCerrar&#xA;in event evPresencia&#xA;in event evNoPresencia&#xA;//Acciones&#xA;operation opMotorGiro(&#xA;&#x9;Prender: boolean,&#xA;&#x9;Sentido: boolean&#xA;): void&#xA;operation opMotorQuieto() : boolean&#xA;operation opFrenarMotor() : void&#xA;operation opLedEstado(&#xA;&#x9;Prender: boolean,&#xA;&#x9;Color: integer&#xA;): void&#xA;//Constantes&#xA;const ON: boolean = true&#xA;const OFF: boolean = false&#xA;const ABRIR: boolean = true&#xA;const CERRAR: boolean = false&#xA;const LED_VERDE: integer  = 0&#xA;const LED_ROJO: integer = 1&#xA;//Variables&#xA;&#xA;internal:&#xA;//Señales internas&#xA;event siLedVerde&#xA;event siLedRojo&#xA;//Tiempo de prendido de los leds&#xA;var viMiliSegundos: integer = 500&#xA;//Tiempo de espera hasta cambiar el giro del motor&#xA;var viMotorTiempoFrenado: integer = 1" name="porton_levadizo">
     <regions xmi:id="_xLEKQ5IqEeqDCptTKJS1iw" name="Porton">
       <vertices xsi:type="sgraph:Entry" xmi:id="_xLNUMJIqEeqDCptTKJS1iw">
         <outgoingTransitions xmi:id="_-SAqAJI4EeqJ7qM6xoRx0w" specification="" target="_xLN7R5IqEeqDCptTKJS1iw"/>
@@ -20,10 +20,10 @@
         <outgoingTransitions xmi:id="_nTJsIJI5EeqJ7qM6xoRx0w" specification="[Porton.evPresencia || &#xA;&#x9;Porton.evControlRemotoAbrir&#xA;]" target="_6k3p4JI4EeqJ7qM6xoRx0w"/>
       </vertices>
       <vertices xsi:type="sgraph:State" xmi:id="_4HS0MJI4EeqJ7qM6xoRx0w" specification="entry / Porton.&#xA;opFrenarMotor()" name="FRENAR_B" incomingTransitions="_pC39UJI5EeqJ7qM6xoRx0w">
-        <outgoingTransitions xmi:id="_q0d2wJI5EeqJ7qM6xoRx0w" specification="[Porton.opMotorQuieto() == &#xA;&#x9;true&#xA;]" target="_rxDQQJI4EeqJ7qM6xoRx0w"/>
+        <outgoingTransitions xmi:id="_q0d2wJI5EeqJ7qM6xoRx0w" specification="after 1s" target="_rxDQQJI4EeqJ7qM6xoRx0w"/>
       </vertices>
       <vertices xsi:type="sgraph:State" xmi:id="_6k3p4JI4EeqJ7qM6xoRx0w" specification="entry / Porton.&#xA;opFrenarMotor()" name="FRENAR_A" incomingTransitions="_nTJsIJI5EeqJ7qM6xoRx0w">
-        <outgoingTransitions xmi:id="_oFNbMJI5EeqJ7qM6xoRx0w" specification="[Porton.opMotorQuieto() == &#xA;&#x9;true&#xA;]" target="_qwytIJI4EeqJ7qM6xoRx0w"/>
+        <outgoingTransitions xmi:id="_oFNbMJI5EeqJ7qM6xoRx0w" specification="after 1s" target="_qwytIJI4EeqJ7qM6xoRx0w"/>
       </vertices>
     </regions>
     <regions xmi:id="__Jj1sJI7EeqJ7qM6xoRx0w" name="Indicadores">
@@ -364,7 +364,7 @@
     <edges xmi:id="_oFPQYJI5EeqJ7qM6xoRx0w" type="Transition" element="_oFNbMJI5EeqJ7qM6xoRx0w" source="_6k10sJI4EeqJ7qM6xoRx0w" target="_qwxfAZI4EeqJ7qM6xoRx0w">
       <children xsi:type="notation:DecorationNode" xmi:id="_oFQegJI5EeqJ7qM6xoRx0w" type="TransitionExpression">
         <styles xsi:type="notation:ShapeStyle" xmi:id="_oFQegZI5EeqJ7qM6xoRx0w"/>
-        <layoutConstraint xsi:type="notation:Location" xmi:id="_oFQegpI5EeqJ7qM6xoRx0w" x="-43" y="35"/>
+        <layoutConstraint xsi:type="notation:Location" xmi:id="_oFQegpI5EeqJ7qM6xoRx0w" x="-46" y="10"/>
       </children>
       <styles xsi:type="notation:ConnectorStyle" xmi:id="_oFPQYZI5EeqJ7qM6xoRx0w" routing="Rectilinear" lineColor="4210752"/>
       <styles xsi:type="notation:FontStyle" xmi:id="_oFP3cJI5EeqJ7qM6xoRx0w" fontName="Verdana"/>
@@ -386,7 +386,7 @@
     <edges xmi:id="_q0fE4JI5EeqJ7qM6xoRx0w" type="Transition" element="_q0d2wJI5EeqJ7qM6xoRx0w" source="_4HQ_AJI4EeqJ7qM6xoRx0w" target="_rxBbEZI4EeqJ7qM6xoRx0w">
       <children xsi:type="notation:DecorationNode" xmi:id="_q0gTAJI5EeqJ7qM6xoRx0w" type="TransitionExpression">
         <styles xsi:type="notation:ShapeStyle" xmi:id="_q0gTAZI5EeqJ7qM6xoRx0w"/>
-        <layoutConstraint xsi:type="notation:Location" xmi:id="_q0gTApI5EeqJ7qM6xoRx0w" x="-18" y="-36"/>
+        <layoutConstraint xsi:type="notation:Location" xmi:id="_q0gTApI5EeqJ7qM6xoRx0w" x="-17" y="-21"/>
       </children>
       <styles xsi:type="notation:ConnectorStyle" xmi:id="_q0fE4ZI5EeqJ7qM6xoRx0w" routing="Rectilinear" lineColor="4210752"/>
       <styles xsi:type="notation:FontStyle" xmi:id="_q0fr8JI5EeqJ7qM6xoRx0w" fontName="Verdana"/>
