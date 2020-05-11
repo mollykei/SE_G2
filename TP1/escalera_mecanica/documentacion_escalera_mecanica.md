@@ -30,9 +30,9 @@ Mientras no haya personas en la escalera, el sensor se mantiene en el estado **E
 
 ###  Diagrama de estados
 
-![Diagrama de escalera mecánica]([https://i.imgur.com/pxcDT6R.png](https://i.imgur.com/pxcDT6R.png)
-![Diagrama de señalizaciones luminosas]([https://i.imgur.com/NO5P9Jm.png](https://i.imgur.com/NO5P9Jm.png)
-![Diagrama de contro de ingreso y egreso]([https://i.imgur.com/Y4RsTf4.png](https://i.imgur.com/Y4RsTf4.png)
+![Diagrama de escalera mecánica](https://i.imgur.com/pxcDT6R.png)
+![Diagrama de señalizaciones luminosas](https://i.imgur.com/NO5P9Jm.png)
+![Diagrama de contro de ingreso y egreso](https://i.imgur.com/Y4RsTf4.png)
 
   
 
