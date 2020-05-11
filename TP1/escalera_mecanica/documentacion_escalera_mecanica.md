@@ -16,9 +16,9 @@ La escalera mecánica permanece en modo apagado **ESCALERA APAGADA** hasta que e
 
 Mientras la escalera está apagada, el usuario puede seleccionar una de dos velocidades, en ese momento la escalera permanece apagada, en el estado **CAMBIANDO VELOCIDAD**.
 
-El sistema de señalización luminosa funciona cuando la escalera esta encendida, es decir, cuando la escalera está apagada, la luz se encuentra en el estado **LUZ APAGADA***.
+El sistema de señalización luminosa funciona cuando la escalera esta encendida, es decir, cuando la escalera está apagada, la luz se encuentra en el estado **LUZ APAGADA**.
 
-Cuando la escalera se enciende, en velocidad 1, la luz pasa al estado **LUZ TITILA LENTO*** y cuando la escalera se enciende en velocidad 2, la luz pasa al estado **LUZ TITILA RÁPIDO**
+Cuando la escalera se enciende, en velocidad 1, la luz pasa al estado **LUZ TITILA LENTO** y cuando la escalera se enciende en velocidad 2, la luz pasa al estado **LUZ TITILA RÁPIDO**
 
 Finalmente la escalera tiene un sensor de ingreso y egreso de personas. Funciona tanto con la escalera apagada como con la escalera encendida.
 
