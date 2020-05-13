@@ -4,7 +4,7 @@
 Se realizó el modelo de un panel de Control de un Generador de Señales, de acuerdo a las siguiente especificaciones:
 
 ```
-- Rango de tensión de salida: 0 a 10V.'
+- Rango de tensión de salida: 0 a 10V.
 - Frecuencia de salida configurable entre 20 Hz y 20 kHz
 - Forma de señal triangular, cuadrada y senoidal.
 - Selección manual de la tensión de salida, frecuencia y forma de onda.
@@ -81,7 +81,7 @@ En la primera región, `forma de la señal`, se tienen las tres formas de la se�
 El comportamiento de los estados se dará de forma cíclica determinada por el evento `evForma`.
 
 <div style="align: center; text-align:center;">
-<img src="https://drive.google.com/open?id=1PuqPrto8Iv4MF-F_pza2cozjMWcQvWe0" />
+<img src=https://ibb.co/hZD2Syr" />
 <div>Región 1 - Forma de la señal</div>
 </div>
 
@@ -95,7 +95,7 @@ Por defecto, el pulsador se encuentra posicionado para modicar la tensión por m
 Al producirse el `evMagnitud`, la conducta de la operación `opSetearMagnitud` y los eventos `evSubir` y `evBajar` en el estado `FRECUENCIA` serán idénticos a los ocurridos en el estado `TENSION`. 
 
 <div style="align: center; text-align:center;">
-<img src="https://drive.google.com/open?id=1FwTllYdWVDABO6rojdCJezCobq1CF0kR" />
+<img src="https://ibb.co/NnKzzYC" />
 <div>Región 2 - Magnitudes</div>
 </div>
 
@@ -104,12 +104,12 @@ Al producirse el `evMagnitud`, la conducta de la operación `opSetearMagnitud` y
 Las regiones de `LEDs` cuentan con un estado de encendido (`ON`) que se dará al producirse el `evSubir` en el caso que el valor de la tensión/frecuencia, `viTension`/`viFrecuencia` sea máximo y el de apagado (`OFF`) cuando `viTension`/`viFrecuencia` sea menor al máximo valor. 
 
 <div style="align: center; text-align:center;">
-<img src="https://drive.google.com/open?id=1lUQomCcSXjfhNjPxp0p6_KOvZvxX6sDf" />
+<img src="https://ibb.co/Fzb39nn" />
 <div>Región 3 - LED Frecuencia</div>
 </div>
 
 <div style="align: center; text-align:center;">
-<img src="https://drive.google.com/open?id=1JzH3k5qGGMl7WG5bf_ubxNb_fl_tD8Oo" />
+<img src="https://ibb.co/JmbWq6n" />
 <div>Región 4 - LED Tensión</div>
 </div>
 
