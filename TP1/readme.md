@@ -92,15 +92,15 @@ Por defecto, el pulsador se encuentra posicionado para modicar la tensión por m
 
 Al producirse el `evMagnitud`, la conducta de la operación `opSetearMagnitud` y los eventos `evSubir` y `evBajar` en el estado `FRECUENCIA` serán idénticos a los ocurridos en el estado `TENSION`. 
 
-![](https://ibb.co/NnKzzYC)
+![](http://drive.google.com/uc?export=view&id=1FwTllYdWVDABO6rojdCJezCobq1CF0kR)
 
 ### Regiones 3 y 4 - LEDs Frecuencia y Tensión
 
 Las regiones de `LEDs` cuentan con un estado de encendido (`ON`) que se dará al producirse el `evSubir` en el caso que el valor de la tensión/frecuencia, `viTension`/`viFrecuencia` sea máximo y el de apagado (`OFF`) cuando `viTension`/`viFrecuencia` sea menor al máximo valor. 
 
-![](https://ibb.co/Fzb39nn)
+![](http://drive.google.com/uc?export=view&id=1lUQomCcSXjfhNjPxp0p6_KOvZvxX6sDf)
 
-![](http://drive.google.com/uc?export=view&id=)
+![](http://drive.google.com/uc?export=view&id=1JzH3k5qGGMl7WG5bf_ubxNb_fl_tD8Oo)
 
 
 ## Código
