@@ -80,7 +80,9 @@ En la primera región, `forma de la señal`, se tienen las tres formas de la se�
 
 El comportamiento de los estados se dará de forma cíclica determinada por el evento `evForma`.
 
-![](https://ibb.co/hZD2Syr)
+
+
+![](http://drive.google.com/uc?export=view&id=1PuqPrto8Iv4MF-F_pza2cozjMWcQvWe0)
 
 ### Región 2 - Magnitudes
 
@@ -98,7 +100,7 @@ Las regiones de `LEDs` cuentan con un estado de encendido (`ON`) que se dará al
 
 ![](https://ibb.co/Fzb39nn)
 
-![](https://ibb.co/JmbWq6n)
+![](http://drive.google.com/uc?export=view&id=)
 
 
 ## Código
