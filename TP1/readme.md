@@ -80,9 +80,7 @@ En la primera región, `forma de la señal`, se tienen las tres formas de la se�
 
 El comportamiento de los estados se dará de forma cíclica determinada por el evento `evForma`.
 
-
-
-![](http://drive.google.com/uc?export=view&id=1PuqPrto8Iv4MF-F_pza2cozjMWcQvWe0)
+![](http://drive.google.com/uc?export=1PuqPrto8Iv4MF-F_pza2cozjMWcQvWe0)
 
 ### Región 2 - Magnitudes
 
