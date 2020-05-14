@@ -49,3 +49,11 @@ Dentro de Ecplipse, en la pestaña de **Project_Explorer** deberia figurarnos la
 Hacer el click derecho en el archivo toggle.sct->Run As->Statechart Simulation. Esto deberia correr la simulacion, que se vera de la siguiente manera.
 
 ![alt text](https://user-images.githubusercontent.com/9441622/81479641-c3bcc000-91fa-11ea-9150-03767ebbc243.png)
+
+
+##### Documentación por ejercicio
+ - ![Panel de Control](https://github.com/mollykei/SE_G2/tree/master/TP1/control_panel)
+ - ![Escalera Mecanica](https://github.com/mollykei/SE_G2/blob/master/TP1/escalera_mecanica/documentacion_escalera_mecanica.md)
+  - ![Horno Microondas](https://github.com/mollykei/SE_G2/blob/master/TP1/horno_micoondas/documentacion.md)
+  - ![Porton Levadizo](https://github.com/mollykei/SE_G2/blob/master/TP1/porton_levadizo/documentacion.md)
+  - ![Puerta Corrediza](https://github.com/mollykei/SE_G2/blob/master/TP1/puerta_corrediza/documentacion.md)
