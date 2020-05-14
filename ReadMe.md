@@ -52,8 +52,8 @@ Hacer el click derecho en el archivo toggle.sct->Run As->Statechart Simulation. 
 
 
 ##### Documentación por ejercicio
- - ![Panel de Control](https://github.com/mollykei/SE_G2/tree/master/TP1/control_panel)
- - ![Escalera Mecanica](https://github.com/mollykei/SE_G2/blob/master/TP1/escalera_mecanica/documentacion_escalera_mecanica.md)
-  - ![Horno Microondas](https://github.com/mollykei/SE_G2/blob/master/TP1/horno_micoondas/documentacion.md)
-  - ![Porton Levadizo](https://github.com/mollykei/SE_G2/blob/master/TP1/porton_levadizo/documentacion.md)
-  - ![Puerta Corrediza](https://github.com/mollykei/SE_G2/blob/master/TP1/puerta_corrediza/documentacion.md)
+ - [Panel de Control](https://github.com/mollykei/SE_G2/tree/master/TP1/control_panel)
+ - [Escalera Mecanica](https://github.com/mollykei/SE_G2/blob/master/TP1/escalera_mecanica/documentacion_escalera_mecanica.md)
+  - [Horno Microondas](https://github.com/mollykei/SE_G2/blob/master/TP1/horno_micoondas/documentacion.md)
+  - [Porton Levadizo](https://github.com/mollykei/SE_G2/blob/master/TP1/porton_levadizo/documentacion.md)
+  - [Puerta Corrediza](https://github.com/mollykei/SE_G2/blob/master/TP1/puerta_corrediza/documentacion.md)
