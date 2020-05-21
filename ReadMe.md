@@ -2,7 +2,7 @@
 
 ### Integrantes
 
- - *Fernando Iglesias*
+ - *Fernando Iglesias* [\<Repositorio personal de la materia\>](https://github.com/nandroidj/sistemas_embebidos)
  - *Ignacio L. J. Carballeda* [\<Repositorio personal de la materia\>](https://github.com/nachocarballeda/embebidos_fiuba)
  - *Katrine Poulsen*
  - *Matías Sambrizzi* [\<Repositorio personal de la materia\>](https://github.com/matiassambrizzi/embebidos_sambrizzi)
