@@ -5,7 +5,7 @@
  - *Fernando Iglesias*
  - *Ignacio L. J. Carballeda* [\<Repositorio personal de la materia\>](https://github.com/nachocarballeda/embebidos_fiuba)
  - *Katrine Poulsen*
- - *Matías Sambrizzi*
+ - *Matías Sambrizzi* [\<Repositorio personal de la materia\>](https://github.com/matiassambrizzi/embebidos_sambrizzi)
 
 ### Tutorial StateCharts Yakindu
 
