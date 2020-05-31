@@ -56,10 +56,12 @@ int main( void )
             // Chequear si el valor leido es encedido
             if( ledValue == ON ) {
                // Si esta encendido mostrar por UART_USB "LED encendido."
-               printf( "LED encendido.\r\n" );
+                printf( "LED encendido.\r\n" );
+            	//stdioPrintf(UART_USB, "LED encendidooo.\r\n");
             } else {
                // Si esta apagado mostrar por UART_USB "LED apagado."
                printf( "LED apagado.\r\n" );
+               //stdioPrintf(UART_USB, "LED apagadooo.\r\n");
             }
             delay( 250 );
             
