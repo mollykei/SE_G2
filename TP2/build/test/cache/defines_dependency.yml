@@ -1,0 +1,31 @@
+---
+build/test/mocks/mock_scu_18xx_43xx.c:
+- TEST
+- STATIC=static
+- __IO=volatile
+- __I=volatile
+- __O=volatile
+- INLINE=inline
+- CHIP_LPC43XX
+- CORE_M4
+- __STATIC_INLINE='static inline'
+build/test/mocks/mock_gpio_18xx_43xx.c:
+- TEST
+- STATIC=static
+- __IO=volatile
+- __I=volatile
+- __O=volatile
+- INLINE=inline
+- CHIP_LPC43XX
+- CORE_M4
+- __STATIC_INLINE='static inline'
+src/my_gpio.c:
+- TEST
+- STATIC=static
+- __IO=volatile
+- __I=volatile
+- __O=volatile
+- INLINE=inline
+- CHIP_LPC43XX
+- CORE_M4
+- __STATIC_INLINE='static inline'

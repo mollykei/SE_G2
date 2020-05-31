@@ -2,14 +2,14 @@
 #### Sistemas Embebidos
 ##### Manejos de Entradas y Salidas
 
-Para compilar el programa se deberan seguir los siguientes pasos
+Para compilar el programa se deberán seguir los siguientes pasos
 1. Ubicar esta carpeta en `firmware_v3/examples/c/tp2`
 1. Copiar el archivo `program.mk` y ubicarlo en `firmware_v3` junto con el `Makefile`
 1. Ya se podrá compilar el programa normalmente
 
 ### app.c
-#### Identificar funciones de la libreria sAPI
-Se identificaron las siguietnes funciones de la libreria `sAPI` que se utilizan en el programa `app.c`.
+#### Identificar funciones de la librería sAPI
+Se identificaron las siguientes funciones de la librería `sAPI` que se utilizan en el programa `app.c`.
 - Archivo: `sapi_board.h`
 	- `void boardInit(void);`
 	> Esta función inicializa los distintos GPIO y el conte de ciclos de clock. 
@@ -47,5 +47,4 @@ void __stdio_init()
 De esta forma se inicializa el `UART` con una velocidad de `DEBUG_UART_BAUD_RATE 115200`
 
 #### Funcionamiento del programa
-
-Al iniciar el programa se ejecuta la función `boardInit()` que se encarga de inicializar los distintos GPIO. 
+Al iniciar el programa se ejecuta la función `boardInit()` que se encarga de inicializar los distintos GPIO. Luego el programa utiliza la función `gpioToggle(CIAA_BOARD_LED)` para prender y apagar un el led de la placa, esto lo realiza por 10 segundos. Luego, entra al ciclo `while(TRUE)` donde prenderá el LED siempre y cuando se presione el botón `CIAA_BOARD_BUTTON`. 
