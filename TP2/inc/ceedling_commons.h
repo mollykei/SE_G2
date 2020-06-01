@@ -1,12 +1,12 @@
-#ifndef MY_GPIO_H
-#define MY_GPIO_H
+#ifndef EXAMPLES_C_TP2_TP2_SRC_CEEDLING_COMMONS_H_
+#define EXAMPLES_C_TP2_TP2_SRC_CEEDLING_COMMONS_H_
 
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 
 //Estos includes solo son para el test de ceedling
-#ifdef TEST
+
 #define SCU_MODE_PULLUP            (0x0 << 3)		/*!< Enable pull-up resistor at pad */
 #define SCU_MODE_REPEATER          (0x1 << 3)		/*!< Enable pull-down and pull-up resistor at resistor at pad (repeater mode) */
 #define SCU_MODE_INACT             (0x2 << 3)		/*!< Disable pull-down and pull-up resistor at resistor at pad */
@@ -29,32 +29,6 @@
 #define SCU_PINIO_FAST             (SCU_MODE_INACT | SCU_MODE_HIGHSPEEDSLEW_EN | SCU_MODE_INBUFF_EN | SCU_MODE_ZIF_DIS)
 #define LPC_GPIO_PORT_BASE        0x400F4000
 #define LPC_GPIO_PORT             ((LPC_GPIO_T             *) LPC_GPIO_PORT_BASE)
-#endif
-
-// edu-ciaa pins
-typedef enum {
-	LED1,
-	LED2,
-	LED3
-}my_gpio_map_t;
-
-// configs
-typedef enum {
-	MY_GPIO_OUTPUT,
-	MY_GPIO_INPUT,
-	MY_GPIO_INPUT_PULLDOWN,
-	MY_GPIO_INPUT_PULLUP
-}my_gpio_config_t;
 
 
-//Tell the compiler that the private struct exist
-//but I don't tell what is inside
-// I can use this outside
-/*
-struct _my_gpio_pins_t;
-typedef struct _my_gpio_pins_t * my_gpio_pins_t;
-*/
-
-void my_gpio_init(my_gpio_map_t pin , my_gpio_config_t config);
-
-#endif // MY_GPIO_H
+#endif /* EXAMPLES_C_TP2_TP2_SRC_CEEDLING_COMMONS_H_ */

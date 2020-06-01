@@ -35,6 +35,7 @@
     - -:test/support
   :source:
     - src/**
+    - inc/**
     - /home/matias/CIAA/firmware_v3/libs/lpc_open/lpc_chip_43xx/inc
   :support:
     - test/support
@@ -47,9 +48,10 @@
   :common: &common_defines []
   :test:
     - *common_defines
-    - TEST
+    - TEST_CEEDLING
   :test_preprocess:
     - *common_defines
+    - TEST_CEEDLING
 :cmock:
   :mock_prefix: mock_
   :when_no_prototypes: :warn
