@@ -13,7 +13,7 @@ char* GlobalOrderError;
 /*=======External Functions This Runner Calls=====*/
 extern void setUp(void);
 extern void tearDown(void);
-extern void test_my_gpio_NeedToImplement(void);
+extern void test_my_gpio_init_input(void);
 
 
 /*=======Mock Management=====*/
@@ -84,7 +84,7 @@ static void run_test(UnityTestFunction func, const char* name, int line_num)
 int main(void)
 {
   UnityBegin("test_my_gpio.c");
-  run_test(test_my_gpio_NeedToImplement, "test_my_gpio_NeedToImplement", 16);
+  run_test(test_my_gpio_init_input, "test_my_gpio_init_input", 15);
 
   CMock_Guts_MemFreeFinal();
   return UnityEnd();

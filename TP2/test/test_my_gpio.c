@@ -5,19 +5,21 @@
 
 #include "my_gpio.h"
 
-
-
 void setUp(void) {
+
 }
 
 void tearDown(void) {
 }
 
-void test_my_gpio_NeedToImplement(void) {
+void test_my_gpio_init_input(void) {
 
+	//Expected for gpio_init_input
 	Chip_SCU_PinMux_Expect(1, 1,
-			SCU_MODE_INACT | SCU_MODE_INBUFF_EN | SCU_MODE_ZIF_DIS, 1);
+			0, 0);
+	Chip_GPIO_SetDir_Expect( LPC_GPIO_PORT,
+			1, ( 1 << 1 ), 1 );
 
-	my_gpio_init(1, 2, 1);
+	my_gpio_init(LED1, MY_GPIO_INPUT);
 
 }
