@@ -23,7 +23,7 @@ PROGRAM_PATH = examples/c/projects
 PROGRAM_NAME = TP2
 ```
 
-Por último, para poder utilizar el *debugger*, se debe ir a la configuración del mismo y agregar en el campo **C/C++ Application**  **Search Project...** de la solapa **Main** el archivo de extensión `.elf`.  
+Por último, para poder utilizar el *debugger*, se debe ir a la configuración del mismo y agregar el archivo de extensión `.elf` en el campo **C/C++ Application**  **Search Project...** de la solapa **Main**.  
 
 ![debugger_configuration_1](https://github.com/mollykei/SE_G2/blob/tp_iglesias/TP2/imgs/2_config_debugger.png)
 
