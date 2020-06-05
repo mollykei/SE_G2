@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "my_gpio.h"
 
-static void _boardInit(void) {
+int main(void) {
 
 	SystemCoreClockUpdate();
 	cyclesCounterInit(SystemCoreClock);
@@ -14,12 +14,6 @@ static void _boardInit(void) {
 #endif
 
 	my_gpio_init(MY_GPIO_LEDR, MY_GPIO_OUTPUT);
-
-}
-
-int main(void) {
-
-	_boardInit();
 
 	while (1) {
 

@@ -1,8 +1,5 @@
 #include "unity.h"
-
-#include "mock_scu_18xx_43xx.h"
-#include "mock_gpio_18xx_43xx.h"
-
+#include "mock_cp_mcu_scu_gpio.h"
 #include "my_gpio.h"
 
 void setUp(void) {

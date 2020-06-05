@@ -1,10 +1,5 @@
 #include "my_gpio.h"
 
-#ifdef TEST_CEEDLING
-#include "scu_18xx_43xx.h"
-#include "gpio_18xx_43xx.h"
-#endif
-
 // Private struct
 struct _my_gpio_pins_t {
 	uint8_t scu_port;

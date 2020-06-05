@@ -36,7 +36,7 @@
   :source:
     - src/**
     - inc/**
-    - /home/matias/CIAA/firmware_v3/libs/lpc_open/lpc_chip_43xx/inc
+    - ./
   :support:
     - test/support
   :libraries: []
@@ -64,23 +64,14 @@
     uint32_t: UINT32
     int8_t: INT8
     bool: UINT8
-  :defines:
-    - STATIC=static
-    - __IO=volatile
-    - __I=volatile
-    - __O=volatile
-    - INLINE=inline
-    - CHIP_LPC43XX
-    - CORE_M4
-    - __STATIC_INLINE='static inline'
   :includes:
     - <stdbool.h> 
     - <stdlib.h>
     - <stdint.h>
   :treat_externs: 
     :include
-  :treat_inlines: 
-    :include
+    #  :treat_inlines: 
+    #:include
 
 
 

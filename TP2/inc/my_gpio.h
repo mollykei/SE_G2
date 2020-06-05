@@ -1,10 +1,12 @@
 #ifndef MY_GPIO_H
 #define MY_GPIO_H
 
-#ifdef TEST_CEEDLING
-#include "ceedling_commons.h"
-#else
 #include <stdbool.h>
+
+#ifdef TEST_CEEDLING
+//cp_mcu_scu_gpio.h is a header file with out dependencies, just to mock the functions
+#include "cp_mcu_scu_gpio.h"
+#else
 #include "sapi.h"
 #endif
 
