@@ -42,6 +42,8 @@ En el siguiente diagrama se presenta la secuencia de funciones invocadas durante
 
 A continuación se presenta un listado con las funciones invocados con sus respectivos datos,
 
+#ToDo: agregar los tipos de variables y sus respectivos nombres. Tambien agregar una breve descripcion de cada funcion.
+
 ```
 main() : int
 	boardInit() : void
