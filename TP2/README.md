@@ -2,6 +2,88 @@
 #### Sistemas Embebidos
 ##### Manejos de Entradas y Salidas
 
+# Creación de las funciones de inicializacion, escritura y lectura.
+
+
+## ToDo: identificacion de las estructuras que respresentan los perifericos SCU y GPIO y las **funciones** implementadas para manejarlas,...
+
+## Configuración del GPIO
+
+En la siguiente tabla se puede observar los tipos de **configuraciones** disponibles para la utilización del GPIO.
+
+| Tipo           | Observación              |
+| -------------- |:------------------------:|
+| INPUT          | No *PULLUP* o *PULLDOWN* |
+| OUTPUT         | -                        |
+| PULLDOWN       | are neat                 |
+| INPUT_REPEATER | *PULLUP* y *PULLDOWN*    |
+| OUTPUT         | -                        |
+| ENABLE         | -                        |
+
+La información obtenida puede observarse en el tipo enumerativo `gpioInit_t` del archivo *~/libs/sapi/sapi_v0.5.2/board/src/sapi_board.c*.
+
+## Estructura de datos y variables
+
+En primer lugar, se incializan los pines de las entradas/salidas de propósito general disponibles en la *EDU CIAA-NXP*. Para ello, se crea la estructura `_my_gpio_pins_t` que contiene  miembros de los periféricos **SCU** y **GPIO**.
+
+```
+struct _my_gpio_pins_t {
+	uint8_t scu_port;
+	uint8_t scu_pin;
+	uint8_t gpio_port;
+	uint8_t gpio_pin;
+	uint8_t func;
+}; 
+```
+
+[Link a la estructura de datos](https://github.com/mollykei/SE_G2/blob/89f43de3445af9ac0b63d856b92cddda22ac6066/TP2/src/my_gpio.c#L9)
+
+Luego, se crea el **vector global** que contiene la inicialización de los pines según la estructura descripta anteriormente. 
+
+```
+const _my_gpio_pins_t gpio_pins_init[] = {
+		//{scu_port, scu_pin, gpio_port, gpio_pin, function}
+		{ 2, 10, 0, 14, 0 }, //LED1
+		{ 2, 11, 1, 11, 0 }, //LED2
+		{ 2, 12, 1, 12, 0 }, //LED3
+		{ 2, 0, 5, 0, 4 },   //LEDR
+		{ 2, 1, 5, 1, 4 },   //LEDG
+		{ 2, 2, 5, 2, 4 },   //LEDB
+		{ 1, 0, 0, 4, 0 },   //TEC1
+		{ 1, 1, 0, 8, 0 },   //TEC2
+		{ 1, 2, 0, 9, 0 },   //TEC3
+		{ 1, 6, 1, 9, 0 },   //TEC4
+		{ 6, 1, 3, 0, 0 },   //GPIO0
+		{ 6, 4, 3, 3, 0 },   //GPIO1
+};
+```
+
+[Link al vector global *_my_gpio_pint_t*](https://github.com/mollykei/SE_G2/blob/89f43de3445af9ac0b63d856b92cddda22ac6066/TP2/src/my_gpio.c#L21)
+
+Finalmente, se crea el tipo enumerativo my_gpio_map_t que contiene todas los posibles *GPIOs*,
+
+```
+typedef enum {
+	MY_GPIO_LED1,
+	MY_GPIO_LED2,
+	MY_GPIO_LED3,
+	MY_GPIO_LEDR,
+	MY_GPIO_LEDG,
+	MY_GPIO_LEDB,
+	MY_GPIO_TEC1,
+	MY_GPIO_TEC2,
+	MY_GPIO_TEC3,
+	MY_GPIO_TEC4,
+	MY_GPIO_GPIO0,
+	MY_GPIO_GPIO1,
+} my_gpio_map_t;
+```
+
+[Link al tipo enumerativo *mu_gpio_map_t*](https://github.com/mollykei/SE_G2/blob/89f43de3445af9ac0b63d856b92cddda22ac6066/TP2/inc/my_gpio.h#L16)
+
+
+
+--------------------------------------------------------------------------------------------------------------------------
 Para compilar el programa se deberán seguir los siguientes pasos
 1. Ubicar esta carpeta en `firmware_v3/examples/c/tp2`
 1. Copiar el archivo `program.mk` y ubicarlo en `firmware_v3` junto con el `Makefile`
