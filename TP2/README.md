@@ -1,5 +1,10 @@
 ## Trabajo práctico 2
 #### Sistemas Embebidos
+
+##### Exportacion de un programa CIAA utilizando Eclipse
+
+[Link al tutorial paso a paso](https://github.com/nachocarballeda/embebidos_fiuba/wiki/TP2:-Tutorial-exportacion-de-programa)
+
 ##### Manejos de Entradas y Salidas
 
 # Creación de las funciones de inicializacion, escritura y lectura.
