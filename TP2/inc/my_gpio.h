@@ -72,7 +72,7 @@ void my_gpio_write(my_gpio_map_t const pin, bool const val);
 /*
  * @brief gpio read pin
  * @param pin mcu pin to be read
- * @return readed value
+ * @return the current value of the pin
  */
 bool my_gpio_read(my_gpio_map_t const pin);
 
