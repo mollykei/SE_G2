@@ -166,7 +166,10 @@ main() : int
 # Creación de las funciones de inicializacion, escritura y lectura.
 
 
-## ToDo: identificacion de las estructuras que respresentan los perifericos SCU y GPIO y las **funciones** implementadas para manejarlas,...
+## Identificacion de las estructuras que respresentan los perifericos SCU y GPIO y las **funciones** implementadas para manejarlas:
+
+[Link a la wiki-page en donde se detallan las estructuras SCU, GPIO y las funciones implementadas](https://github.com/nachocarballeda/embebidos_fiuba/wiki/TP2-2.d.i.1)
+
 
 ## Configuración del GPIO
 
