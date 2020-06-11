@@ -52,113 +52,113 @@ A continuación se presenta un listado con las funciones invocados con sus respe
 main() : int
 	boardInit() : void
 		SystemCoreClockUpdate() : void
-			SystemCoreClock : ?
-			Chip_Clock_GetRate(?) : ?
-				Chip_Clock_FindBaseClock(?) : ?
+			SystemCoreClock : uint32_t
+			Chip_Clock_GetRate(uint32_t) : uint32_t
+				Chip_Clock_FindBaseClock(uint32_t) : uint32_t
 					periph_to_base : const CLK_PERIPH_TO_BASE_T [] (4 matches)
-					(anonymous)::clkbase : ? (2 matches)
-					(anonymous)::clkstart : ?
-					(anonymous)::clkend : ?
-				Chip_Clock_GetBaseClocktHz(?) : ?
-					Chip_Clock_GetClockInputHz(?) : ?
-						ExtRateIn : const ?
-						OscRateIn : const ?
-						audio_usb_pll_freq : ? [] (2 matches)
-						Chip_Clock_GetMainPLLHz() : ?
-							Chip_Clock_GetClockInputHz(?) : ?
-						Chip_Clock_GetDivRate(?, ?) : ? (5 matches)
-							Chip_Clock_GetDividerSource(?) : ?
-							Chip_Clock_GetDividerDivisor(?) : ?
-							Chip_Clock_GetClockInputHz(?) : ?
-					Chip_Clock_GetBaseClock(?) : ?
-		cyclesCounterInit(?) : bool_t
-			ClockSpeed : ?
-		SystemCoreClock : ?
+					(anonymous)::clkbase : uint32_t (2 matches)
+					(anonymous)::clkstart : uint32_t
+					(anonymous)::clkend : uint32_t
+				Chip_Clock_GetBaseClocktHz(uint32_t) : uint32_t
+					Chip_Clock_GetClockInputHz(uint32_t) : uint32_t
+						ExtRateIn : const uint32_t
+						OscRateIn : const uint32_t
+						audio_usb_pll_freq : uint32_t [] (2 matches)
+						Chip_Clock_GetMainPLLHz() : uint32_t
+							Chip_Clock_GetClockInputHz(uint32_t) : uint32_t
+						Chip_Clock_GetDivRate(uint32_t, uint32_t) : uint32_t (5 matches)
+							Chip_Clock_GetDividerSource(uint32_t) : uint32_t
+							Chip_Clock_GetDividerDivisor(uint32_t) : uint32_t
+							Chip_Clock_GetClockInputHz(uint32_t) : uint32_t
+					Chip_Clock_GetBaseClock(uint32_t) : uint32_t
+		cyclesCounterInit(uint32_t) : bool_t
+			ClockSpeed : uint32_t
+		SystemCoreClock : uint32_t
 		tickInit(tick_t) : bool_t
 			tickPowerSet(bool_t) : void (2 matches)
 			tickRateMS : tick_t
-			SysTick_Config(?) : ?
-				SysTick_Config(?) : ?
-					(anonymous)::LOAD : volatile ?
-					__NVIC_SetPriority(IRQn_Type, ?) : void
-						(anonymous)::IP : volatile ? [8] (2 matches)
-						(anonymous)::SHP : volatile ? [2] (2 matches)
+			SysTick_Config(uint32_t) : uint32_t
+				SysTick_Config(uint32_t) : uint32_t
+					(anonymous)::LOAD : volatile uint32_t
+					__NVIC_SetPriority(IRQn_Type, uint32_t) : void
+						(anonymous)::IP : volatile uint32_t [8] (2 matches)
+						(anonymous)::SHP : volatile uint32_t [2] (2 matches)
 					SysTick_IRQn
-					(anonymous)::VAL : volatile ?
-					(anonymous)::CTRL : volatile ?
-				SysTick_Config(?) : ?
-					(anonymous)::LOAD : volatile ?
-					__NVIC_SetPriority(IRQn_Type, ?) : void
-						(anonymous)::IP : volatile ? [240]
-						(anonymous)::SHP : volatile ? [12]
+					(anonymous)::VAL : volatile uint32_t
+					(anonymous)::CTRL : volatile uint32_t
+				SysTick_Config(uint32_t) : uint32_t
+					(anonymous)::LOAD : volatile uint32_t
+					__NVIC_SetPriority(IRQn_Type, uint32_t) : void
+						(anonymous)::IP : volatile uint32_t [240]
+						(anonymous)::SHP : volatile uint32_t [12]
 					SysTick_IRQn
-					(anonymous)::VAL : volatile ?
-					(anonymous)::CTRL : volatile ?
-				SysTick_Config(?) : ?
-					(anonymous)::LOAD : volatile ?
-					__NVIC_SetPriority(IRQn_Type, ?) : void
-						(anonymous)::IP : volatile ? [240]
-						(anonymous)::SHP : volatile ? [12]
+					(anonymous)::VAL : volatile uint32_t
+					(anonymous)::CTRL : volatile uint32_t
+				SysTick_Config(uint32_t) : uint32_t
+					(anonymous)::LOAD : volatile uint32_t
+					__NVIC_SetPriority(IRQn_Type, uint32_t) : void
+						(anonymous)::IP : volatile uint32_t [240]
+						(anonymous)::SHP : volatile uint32_t [12]
 					SysTick_IRQn
-					(anonymous)::VAL : volatile ?
-					(anonymous)::CTRL : volatile ?
-			SystemCoreClock : ?
+					(anonymous)::VAL : volatile uint32_t
+					(anonymous)::CTRL : volatile uint32_t
+			SystemCoreClock : uint32_t
 	delay(tick_t) : void (2 matches)
 		delay(tick_t) : void (2 matches)
 			tickRead() : tick_t (2 matches)
 				tickCounter : tick_t
 			tickRateMS : tick_t
 		delay(tick_t) : void (2 matches)
-			tick_ct : volatile ? (2 matches)
+			tick_ct : volatile uint32_t (2 matches)
 	gpioRead(gpioMap_t) : bool_t (2 matches)
-		gpioObtainPinInit(gpioMap_t, ? *, ? *, ? *, ? *, ? *) : void
+		gpioObtainPinInit(gpioMap_t, uint32_t *, uint32_t *, uint32_t *, uint32_t *, uint32_t *) : void
 			gpioPinsInit : const pinInitGpioLpc4337_t [] (5 matches)
 			(anonymous)::pinName : pinInitLpc4337_t (2 matches)
-			(anonymous)::port : ?
-			(anonymous)::pin : ?
-			(anonymous)::func : ?
+			(anonymous)::port : uint32_t
+			(anonymous)::pin : uint32_t
+			(anonymous)::func : uint32_t
 			(anonymous)::gpio : gpioInitLpc4337_t (2 matches)
-			(anonymous)::port : ?
-			(anonymous)::pin : ?
-		Chip_GPIO_ReadPortBit(LPC_GPIO_T *, ?, ?) : bool
-			(anonymous)::B : ? [128][32]
+			(anonymous)::port : uint32_t
+			(anonymous)::pin : uint32_t
+		Chip_GPIO_ReadPortBit(LPC_GPIO_T *, uint32_t, uint32_t) : bool
+			(anonymous)::B : uint32_t [128][32]
 	gpioWrite(gpioMap_t, bool_t) : bool_t
-		gpioObtainPinInit(gpioMap_t, ? *, ? *, ? *, ? *, ? *) : void
+		gpioObtainPinInit(gpioMap_t, uint32_t *, uint32_t *, uint32_t *, uint32_t *, uint32_t *) : void
 			gpioPinsInit : const pinInitGpioLpc4337_t [] (5 matches)
 			(anonymous)::pinName : pinInitLpc4337_t (2 matches)
-			(anonymous)::port : ?
-			(anonymous)::pin : ?
-			(anonymous)::func : ?
+			(anonymous)::port : uint32_t
+			(anonymous)::pin : uint32_t
+			(anonymous)::func : uint32_t
 			(anonymous)::gpio : gpioInitLpc4337_t (2 matches)
-			(anonymous)::port : ?
-			(anonymous)::pin : ?
-		Chip_GPIO_SetPinState(LPC_GPIO_T *, ?, ?, bool) : void
-			(anonymous)::B : ? [128][32]
+			(anonymous)::port : uint32_t
+			(anonymous)::pin : uint32_t
+		Chip_GPIO_SetPinState(LPC_GPIO_T *, uint32_t, uint32_t, bool) : void
+			(anonymous)::B : uint32_t [128][32]
 	gpioToggle(gpioMap_t) : bool_t
 		gpioWrite(gpioMap_t, bool_t) : bool_t
-			gpioObtainPinInit(gpioMap_t, ? *, ? *, ? *, ? *, ? *) : void
+			gpioObtainPinInit(gpioMap_t, uint32_t *, uint32_t *, uint32_t *, uint32_t *, uint32_t *) : void
 				gpioPinsInit : const pinInitGpioLpc4337_t [] (5 matches)
 				(anonymous)::pinName : pinInitLpc4337_t (2 matches)
-				(anonymous)::port : ?
-				(anonymous)::pin : ?
-				(anonymous)::func : ?
+				(anonymous)::port : uint32_t
+				(anonymous)::pin : uint32_t
+				(anonymous)::func : uint32_t
 				(anonymous)::gpio : gpioInitLpc4337_t (2 matches)
-				(anonymous)::port : ?
-				(anonymous)::pin : ?
-			Chip_GPIO_SetPinState(LPC_GPIO_T *, ?, ?, bool) : void
-				(anonymous)::B : ? [128][32]
+				(anonymous)::port : uint32_t
+				(anonymous)::pin : uint32_t
+			Chip_GPIO_SetPinState(LPC_GPIO_T *, uint32_t, uint32_t, bool) : void
+				(anonymous)::B : uint32_t [128][32]
 		gpioRead(gpioMap_t) : bool_t
-			gpioObtainPinInit(gpioMap_t, ? *, ? *, ? *, ? *, ? *) : void
+			gpioObtainPinInit(gpioMap_t, uint32_t *, uint32_t *, uint32_t *, uint32_t *, uint32_t *) : void
 				gpioPinsInit : const pinInitGpioLpc4337_t [] (5 matches)
 				(anonymous)::pinName : pinInitLpc4337_t (2 matches)
-				(anonymous)::port : ?
-				(anonymous)::pin : ?
-				(anonymous)::func : ?
+				(anonymous)::port : uint32_t
+				(anonymous)::pin : uint32_t
+				(anonymous)::func : uint32_t
 				(anonymous)::gpio : gpioInitLpc4337_t (2 matches)
-				(anonymous)::port : ?
-				(anonymous)::pin : ?
-			Chip_GPIO_ReadPortBit(LPC_GPIO_T *, ?, ?) : bool
-				(anonymous)::B : ? [128][32]
+				(anonymous)::port : uint32_t
+				(anonymous)::pin : uint32_t
+			Chip_GPIO_ReadPortBit(LPC_GPIO_T *, uint32_t, uint32_t) : bool
+				(anonymous)::B : uint32_t [128][32]
 ```
 
 ##### Manejos de Entradas y Salidas
