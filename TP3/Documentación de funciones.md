@@ -1,4 +1,5 @@
 
+
 ## TP3 - Documentación de funciones
 
 
@@ -177,4 +178,7 @@ STATIC INLINE void Chip_UART_TXEnable(LPC_USART_T *pUART)
 
 ```C
 #define UART_TER2_TXEN      (1 << 0)		/*!< Transmit enable bit  - valid for 18xx/43xx only */
+```
+```C
+IO uint32_t TER2;				/*!< Transmit Enable Register. Only on LPC177X_8X UART4 and LPC18XX/43XX USART0/2/3. */
 ```
