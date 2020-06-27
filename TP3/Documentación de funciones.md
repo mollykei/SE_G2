@@ -162,7 +162,7 @@ uint32_t Chip_UART_SetBaud(LPC_USART_T *pUART, uint32_t baudrate)
 }
 ```
 
-También se habilita la trasnmisión en el pin Tx en `/firmware_v3/libs/lpc_open/lpc_chip_43xx/inc/uart_18xx_43xx.h `:
+También se habilita la trasnmisión en el pin Tx en `/firmware_v3/libs/lpc_open/lpc_chip_43xx/inc/uart_18xx_43xx.h ` y se describen los registros que se utilizan, como `TER2`, `ÌER`:
 
 ```C
 /**
