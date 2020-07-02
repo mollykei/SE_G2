@@ -40,9 +40,8 @@
 
 /*==================[inclusions]=============================================*/
 
-#include "../../3_a_uart/inc/main.h"
-
-#include "../../3_a_uart/gen/Uart.h"
+#include "main.h"
+#include "Uart.h"
 #include "sapi.h"
 
 /*==================[macros and definitions]=================================*/
@@ -107,7 +106,6 @@ int main(void)
 {
 	/* Board config*/
 	boardConfig();
-
 	/*Configuro el Debug UART*/
 	uartConfig( UART_USB, 115200 );
 
@@ -126,7 +124,6 @@ int main(void)
 			uartIface_set_viUartRx(&statechart, dato);
 		}
 		uart_runCycle(&statechart);
-
 	}
 }
 

@@ -25,7 +25,7 @@ There are some constraints that have to be considered for the implementation of 
  
 */
 extern void uart_8Iface_opLed(const Uart_8* handle);
-extern void uart_8Iface_opTx(const Uart_8* handle, const sc_integer char, const sc_integer uart);
+extern void uart_8Iface_opTx(const Uart_8* handle, const sc_integer send, const sc_integer uart);
 
 
 

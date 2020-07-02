@@ -44,6 +44,7 @@
 #include "Uart_8.h"
 #include "sapi.h"
 #include "sapi_datatypes.h"
+#include "sapi_peripheral_map.h"
 #include "sapi_uart.h"
 
 /*==================[macros and definitions]=================================*/
@@ -63,18 +64,24 @@ static Uart_8 statechart;
 
 /*==================[external functions definition]==========================*/
 
+void uart_8Iface_opTx(const Uart_8* handle, const sc_integer send, const sc_integer uart)
+{
+	if(uart == UART_8_UART_8IFACE_UARTUSB) {
+	  //uartSetPendingInterrupt(UART_USB);
+		uartWriteByte( UART_USB, send );
 
-/** state machine user-defined external function (action)
- *
- * @param handle es un puntero a la estructura que contene la máquina de estados
- * @param uartRxCharacter es el caracter que se recibió por UART
- * @return nada
- */
+	} else if(uart == UART_8_UART_8IFACE_UART3) {
+	  //uartSetPendingInterrupt(UART_232);
+		uartWriteByte( UART_232, send );
 
-void uart_8Iface_opLed(const Uart* handle)
+	}
+}
+
+
+void uart_8Iface_opLed(const Uart_8* handle)
 {
 	// Leo la variable que recibi por UART
-	sc_integer rxChar = uart_8Iface_get_viUartRx(handle);
+	sc_integer rxChar = uart_8Iface_get_viRxChar(handle);
 
 	switch(rxChar) {
 
@@ -103,19 +110,45 @@ void uart_8Iface_opLed(const Uart* handle)
 
 }
 
-volatile bool_t rxFlag = false;
-volatile uint8_t dato = 0;
+volatile bool_t rxUartUSBFlag = false;
+volatile bool_t rxUart3Flag = false;
+volatile bool_t dataToSendToPcPending = false;
+volatile bool_t txUart3Pending = false;
+volatile uint8_t datoUSB = 0;
+volatile uint8_t datoUart3 = 0;
 
 void onRxUartUSB( void *noUsado )
 {
-	rxFlag = true;
-	dato = uartRxRead( UART_USB );
+	rxUartUSBFlag = true;
+	txUart3Pending = true;
+	datoUSB = uartRxRead(UART_USB);
 }
 
 void onTxUartUSB( void *noUsado )
 {
-	rxFlag = true;
-	dato = uartRxRead( UART_USB );
+	sc_integer value = uart_8Iface_get_viRxChar(&statechart);
+
+	if(dataToSendToPcPending) {
+		dataToSendToPcPending = false;
+		uartTxWrite(UART_USB, value);
+	}
+}
+
+void onRxUart3( void *noUsado )
+{
+	dataToSendToPcPending = true;
+	rxUart3Flag = true;
+	datoUart3 = uartRxRead(UART_232);
+}
+
+void onTxUart3( void *noUsado )
+{
+	sc_integer value = uart_8Iface_get_viRxChar(&statechart);
+
+	if(txUart3Pending) {
+		txUart3Pending = false;
+		uartTxWrite(UART_232, value);
+	}
 }
 
 int main(void)
@@ -125,17 +158,14 @@ int main(void)
 
 	/*Configuro el Debug UART*/
 	uartConfig(UART_USB, 115200);
-	// Seteo el callback del uart
 	uartCallbackSet(UART_USB, UART_RECEIVE, onRxUartUSB, NULL);
-	uartCallbackSet(UART_USB, UART_TRANSMITER_FREE, onTx, NULL);
-	//habilito la interrupcion en el NVIC
+	//uartCallbackSet(UART_USB, UART_TRANSMITER_FREE, onTxUartUSB, NULL);
 	uartInterrupt(UART_USB, true);
 
 	/* Inicializar la UART_232 */
 	uartConfig(UART_232, 115200);
-	uartCallbackSet(UART_232, UART_RECEIVE, uart232ReceiveCallback, NULL);
-	uartCallbackSet(UART_232, UART_TRANSMITER_FREE, uart232SendCallback, NULL);   
-	// Habilito todas las interrupciones de UART_232
+	uartCallbackSet(UART_232, UART_RECEIVE, onRxUart3, NULL);
+	//uartCallbackSet(UART_232, UART_TRANSMITER_FREE, onTxUart3, NULL);
 	uartInterrupt(UART_232, true);
 
 	/* Statechart Initialization */
@@ -143,22 +173,20 @@ int main(void)
 	uart_8_enter(&statechart);
 
 	while (1) {
-
 		// Si me llego una interrupción del uart
 		if(rxUartUSBFlag) {
 			// reseteo el flag
 			rxUartUSBFlag = false;
 			// recibí data por uart
-			uartIface_raise_evUartRx(&statechart);
-			uartIface_set_viUartRx(&statechart, dato);
+			uart_8Iface_set_viRxChar(&statechart, datoUSB);
+			uart_8Iface_raise_evUartUsbRx(&statechart);
 		}
-
-		if(rxUART3Flag) {
-			rxUART3Flag = false;
+		if(rxUart3Flag) {
+			rxUart3Flag = false;
+			uart_8Iface_set_viRxChar(&statechart, datoUart3);
 			uart_8Iface_raise_evUart3Rx(&statechart);
+
 		}
-
-
 		uart_8_runCycle(&statechart);
 	}
 }

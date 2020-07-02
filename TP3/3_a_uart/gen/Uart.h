@@ -14,38 +14,29 @@ extern "C" {
 
 /*! Define number of states in the state enum */
 
-#define UART_STATE_COUNT 3
+#define UART_STATE_COUNT 1
 
 /*! Define dimension of the state configuration vector for orthogonal states. */
 #define UART_MAX_ORTHOGONAL_STATES 1
 
 
 /*! Define indices of states in the StateConfVector */
-#define SCVI_UART_MAIN_REGION_IDLE 0
-#define SCVI_UART_MAIN_REGION_UART_USB_RX 0
-#define SCVI_UART_MAIN_REGION_UART3_RX 0
+#define SCVI_UART_MAIN_REGION_UART_RX 0
 
 /*! Enumeration of all states */ 
 typedef enum
 {
 	Uart_last_state,
-	Uart_main_region_IDLE,
-	Uart_main_region_UART_USB_RX,
-	Uart_main_region_UART3_RX
+	Uart_main_region_UART_RX
 } UartStates;
 
 /*! Type definition of the data structure for the UartIface interface scope. */
 typedef struct
 {
-	sc_boolean evUartUsbRx_raised;
-	sc_boolean evUart3Rx_raised;
-	sc_integer viRxChar;
+	sc_boolean evUartRx_raised;
+	sc_integer viUartRx;
 } UartIface;
 
-
-/* Declaration of constants for scope UartIface. */
-extern const sc_integer UART_UARTIFACE_UARTUSB;
-extern const sc_integer UART_UARTIFACE_UART3;
 
 
 
@@ -76,20 +67,13 @@ extern void uart_exit(Uart* handle);
 extern void uart_runCycle(Uart* handle);
 
 
-/*! Raises the in event 'evUartUsbRx' that is defined in the default interface scope. */ 
-extern void uartIface_raise_evUartUsbRx(Uart* handle);
+/*! Raises the in event 'evUartRx' that is defined in the default interface scope. */ 
+extern void uartIface_raise_evUartRx(Uart* handle);
 
-/*! Raises the in event 'evUart3Rx' that is defined in the default interface scope. */ 
-extern void uartIface_raise_evUart3Rx(Uart* handle);
-
-/*! Gets the value of the variable 'UARTUSB' that is defined in the default interface scope. */ 
-extern sc_integer uartIface_get_uARTUSB(const Uart* handle);
-/*! Gets the value of the variable 'UART3' that is defined in the default interface scope. */ 
-extern sc_integer uartIface_get_uART3(const Uart* handle);
-/*! Gets the value of the variable 'viRxChar' that is defined in the default interface scope. */ 
-extern sc_integer uartIface_get_viRxChar(const Uart* handle);
-/*! Sets the value of the variable 'viRxChar' that is defined in the default interface scope. */ 
-extern void uartIface_set_viRxChar(Uart* handle, sc_integer value);
+/*! Gets the value of the variable 'viUartRx' that is defined in the default interface scope. */ 
+extern sc_integer uartIface_get_viUartRx(const Uart* handle);
+/*! Sets the value of the variable 'viUartRx' that is defined in the default interface scope. */ 
+extern void uartIface_set_viUartRx(Uart* handle, sc_integer value);
 
 /*!
  * Checks whether the state machine is active (until 2.4.1 this method was used for states).

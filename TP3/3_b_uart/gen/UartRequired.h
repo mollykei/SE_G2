@@ -15,7 +15,6 @@ extern "C"
 
 This state machine makes use of operations declared in the state machines interface or internal scopes. Thus the function prototypes:
 	- uartIface_opLed
-	- uartIface_opTx
 are defined.
 
 These functions will be called during a 'run to completion step' (runCycle) of the statechart. 
@@ -24,8 +23,7 @@ There are some constraints that have to be considered for the implementation of 
 	- make sure that the execution time is as short as possible.
  
 */
-extern void uartIface_opLed(const Uart* handle, const sc_integer led, const sc_integer uart);
-extern void uartIface_opTx(const Uart* handle, const sc_integer char, const sc_integer uart);
+extern void uartIface_opLed(const Uart* handle);
 
 
 
