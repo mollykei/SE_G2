@@ -5,5 +5,7 @@
 [Ejercicio 2]
 
 [Ejercicio 3 y 4]
+
 [Ejercicios 5 y 6](https://github.com/nachocarballeda/embebidos_fiuba/wiki/TP3-ej-5-y-6)
+
 [Ejercicio 7 y 8]
