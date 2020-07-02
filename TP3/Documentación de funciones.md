@@ -1,5 +1,6 @@
 
 
+
 ## TP3 - Documentación de funciones
 
 
@@ -229,3 +230,255 @@ typedef struct {					/*!< USARTn Structure       */
 	__IO uint32_t TER2;				/*!< Transmit Enable Register. Only on LPC177X_8X UART4 and LPC18XX/43XX USART0/2/3. */
 } LPC_USART_T;
 ```
+
+2. adcConfig( ADC_ENABLE );
+
+En firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/src/sapi_adc.c se encuentra la definición de adcConfig
+
+
+```C
+#define adcConfig adcInit
+```
+
+```C
+void adcInit( adcInit_t config )
+{
+   /*
+   Pines ADC EDU-CIAA-NXP
+
+               pin  func
+   ADC_CH1 ---- 2   ADC0_1/ADC1_1
+   ADC_CH2 ---- 143 ADC0_2/ADC1_2
+   ADC_CH3 ---- 139 ADC0_3/ADC1_3
+   DAC     ---- 6   ADC0_0/ADC1_0/DAC
+
+   T_FIL1  ---- 3   ADC0_1 (ANALOG_SEL)
+   T_COL2  ---- 133 ADC0_3 (ANALOG_SEL)
+
+   LCD1    ---- 9   DAC (ANALOG_SEL)
+
+   T_FIL3  ---- 7   ADC0_0 (ANALOG_SEL)
+   T_COL1  ---- 132 ADC0_4 (ANALOG_SEL)
+   ENET_MDC --- 140 ADC1_6 (ANALOG_SEL)
+   */
+
+   switch(config) {
+
+      case ADC_ENABLE: {
+
+         /* Config ADC0 sample mode */      
+         ADC_CLOCK_SETUP_T ADCSetup = {
+            ADC_MAX_SAMPLE_RATE,   // ADC Sample rate:ADC_MAX_SAMPLE_RATE = 400KHz
+            10,                    // ADC resolution: ADC_10BITS = 10
+            0                      // ADC Burst Mode: (true or false)
+         };
+
+         Chip_ADC_Init( LPC_ADC0, &ADCSetup );
+         /* Disable burst mode */
+         Chip_ADC_SetBurstCmd( LPC_ADC0, DISABLE );
+         /* Set sample rate to 200KHz */
+         Chip_ADC_SetSampleRate( LPC_ADC0, &ADCSetup, ADC_MAX_SAMPLE_RATE/2 );
+         /* Disable all channels */
+         Chip_ADC_EnableChannel( LPC_ADC0, ADC_CH1, DISABLE );
+         Chip_ADC_Int_SetChannelCmd( LPC_ADC0, ADC_CH1, DISABLE );
+
+         Chip_ADC_EnableChannel( LPC_ADC0, ADC_CH2, DISABLE );
+         Chip_ADC_Int_SetChannelCmd( LPC_ADC0, ADC_CH2, DISABLE );
+
+         Chip_ADC_EnableChannel( LPC_ADC0, ADC_CH3, DISABLE );
+         Chip_ADC_Int_SetChannelCmd( LPC_ADC0, ADC_CH3, DISABLE );
+
+         Chip_ADC_EnableChannel( LPC_ADC0, ADC_CH4, DISABLE );
+         Chip_ADC_Int_SetChannelCmd( LPC_ADC0, ADC_CH4, DISABLE );
+
+         // For aditional ADC Inputs (Pablo Gomez)
+         #if BOARD==edu_ciaa_nxp
+         Chip_SCU_ADC_Channel_Config( 0, 4 );                      // Revisar codigo
+         Chip_ADC_Int_SetChannelCmd( LPC_ADC0, ADC_CH5, DISABLE ); // Revisar codigo
+         #endif
+      }
+      break;
+
+      case ADC_DISABLE:
+         /* Disable ADC peripheral */
+         Chip_ADC_DeInit( LPC_ADC0 );
+         break;
+      }
+
+}
+```
+
+En `firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/inc/sapi_adc.h` se define la estructura `adcInit_t`:
+
+```C
+typedef enum {
+   ADC_ENABLE, ADC_DISABLE
+} adcInit_t;
+```
+
+3. dacConfig( DAC_ENABLE );
+
+En `firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/src/sapi_dac.c` se encuentra la definición de `dacConfig`
+
+
+```C
+#define dacConfig dacInit
+```
+
+```C
+void dacInit( dacInit_t config )
+{
+
+   switch(config) {
+
+   case DAC_ENABLE:
+      /* Initialize the DAC peripheral */
+      //Chip_DAC_Init(LPC_DAC);
+      Chip_Clock_EnableOpts(CLK_APB3_DAC, true, true, 1);
+      /* Set update rate to 400 KHz */
+      Chip_DAC_SetBias(LPC_DAC, DAC_MAX_UPDATE_RATE_400kHz);
+
+      /* Enables the DMA operation and controls DMA timer */
+      Chip_DAC_ConfigDAConverterControl(LPC_DAC, DAC_DMA_ENA);
+      /* DCAR DMA access */
+      /* Update value to DAC buffer*/
+      Chip_DAC_UpdateValue(LPC_DAC, 0);
+      break;
+
+   case DAC_DISABLE:
+      /* Disable DAC peripheral */
+      Chip_DAC_DeInit( LPC_DAC );
+      break;
+   }
+}
+```
+
+
+4. delayConfig( &delay, 500 );
+
+En `firmware_v3/libs/sapi/sapi_v0.5.2/abstract_modules/inc/sapi_delay.h` se define `delayConfig`:
+
+```C
+#define delayConfig delayInit
+```
+
+```C
+void delayInit( delay_t * delay, tick_t duration )
+{
+   delay->duration = duration/tickRateMS;
+   delay->running = 0;
+}
+```
+
+5. muestra = adcRead( CH1 );
+
+```C
+uint16_t adcRead( adcMap_t analogInput )
+{
+   uint8_t lpcAdcChannel = analogInput + 1;
+   uint16_t analogValue = 0;
+
+   // Enable channel
+   Chip_ADC_EnableChannel(LPC_ADC0, lpcAdcChannel, ENABLE);
+
+   // Start conversion
+   Chip_ADC_SetStartMode(LPC_ADC0, ADC_START_NOW, ADC_TRIGGERMODE_RISING);
+
+   // Wait for conversion complete
+   while(
+      (Chip_ADC_ReadStatus(LPC_ADC0, lpcAdcChannel, ADC_DR_DONE_STAT) != SET)
+   );
+
+   // Enable Read value
+   Chip_ADC_ReadValue( LPC_ADC0, lpcAdcChannel, &analogValue );
+
+   // Disable channel
+   Chip_ADC_EnableChannel( LPC_ADC0, lpcAdcChannel, DISABLE );
+
+   return analogValue;
+}
+```
+
+6. uartReadByte( UART_USB, &dato )
+
+En
+
+```C
+// Read 1 byte from RX FIFO, check first if exist aviable data
+bool_t uartReadByte( uartMap_t uart, uint8_t* receivedByte )
+{
+   bool_t retVal = TRUE;
+   if ( uartRxReady(uart) ) {
+      *receivedByte = uartRxRead(uart);
+   } else {
+      retVal = FALSE;
+   }
+   return retVal;
+}
+```
+
+7. uartWriteByte( UART_USB, dato )
+
+```C
+
+void uartWriteByte( uartMap_t uart, const uint8_t value )
+{
+   // Wait for space in FIFO (blocking)
+   while( uartTxReady( uart ) == FALSE );
+   // Send byte
+   uartTxWrite( uart, value );
+}
+
+// Blocking Send a string
+void uartWriteString( uartMap_t uart, const char* str )
+{
+   while( *str != 0 ) {
+      uartWriteByte( uart, (uint8_t)*str );
+      str++;
+   }
+}
+```
+
+8. uartWriteString( UART_USB, "ADC CH1 value: " );
+
+```C
+void uartWriteString( uartMap_t uart, const char* str )
+{
+   while( *str != 0 ) {
+      uartWriteByte( uart, (uint8_t)*str );
+      str++;
+   }
+}
+```
+
+9. dacWrite( DAC, muestra );
+
+```C
+void dacWrite( dacMap_t analogOutput, uint16_t value )
+{
+   if( analogOutput == 0 ) {
+      if( value > 1023 ) {
+         value = 1023;
+      }
+      Chip_DAC_UpdateValue( LPC_DAC, value );
+   }
+}
+```
+```C
+/* Defined for sapi_dac.h */
+typedef enum {
+	#if (BOARD == ciaa_nxp)
+		AO  = 0,
+		AO0 = 0,
+	#elif (BOARD == edu_ciaa_nxp)
+		DAC  = 0,
+		DAC0 = 0,
+	#else
+	   #error BOARD not supported yet!
+	#endif
+} dacMap_t;
+```
+
+10. uartCallbackSet(UART_USB, UART_RECEIVE, onRx, NULL);
+
+11. uartInterrupt(UART_USB, true);
