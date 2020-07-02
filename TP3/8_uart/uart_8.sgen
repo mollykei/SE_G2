@@ -1,6 +1,6 @@
 GeneratorModel for yakindu::c {
 
-	statechart uart {
+	statechart uart_8 {
 
 		feature Outlet {
 			targetProject = "firmware_v3"

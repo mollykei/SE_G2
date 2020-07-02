@@ -41,16 +41,17 @@
 /*==================[inclusions]=============================================*/
 
 #include "main.h"
-#include "Uart.h"
+#include "Uart_8.h"
 #include "sapi.h"
 #include "sapi_datatypes.h"
+#include "sapi_uart.h"
 
 /*==================[macros and definitions]=================================*/
 
 /*==================[internal data declaration]==============================*/
 
 /*! This is a state machine */
-static Uart statechart;
+static Uart_8 statechart;
 
 /*==================[internal functions declaration]=========================*/
 
@@ -70,10 +71,10 @@ static Uart statechart;
  * @return nada
  */
 
-void uartIface_opLed(const Uart* handle)
+void uart_8Iface_opLed(const Uart* handle)
 {
 	// Leo la variable que recibi por UART
-	sc_integer rxChar = uartIface_get_viUartRx(handle);
+	sc_integer rxChar = uart_8Iface_get_viUartRx(handle);
 
 	switch(rxChar) {
 
@@ -105,7 +106,13 @@ void uartIface_opLed(const Uart* handle)
 volatile bool_t rxFlag = false;
 volatile uint8_t dato = 0;
 
-void onRx( void *noUsado )
+void onRxUartUSB( void *noUsado )
+{
+	rxFlag = true;
+	dato = uartRxRead( UART_USB );
+}
+
+void onTxUartUSB( void *noUsado )
 {
 	rxFlag = true;
 	dato = uartRxRead( UART_USB );
@@ -118,29 +125,41 @@ int main(void)
 
 	/*Configuro el Debug UART*/
 	uartConfig(UART_USB, 115200);
-
 	// Seteo el callback del uart
-	uartCallbackSet(UART_USB, UART_RECEIVE, onRx, NULL);
+	uartCallbackSet(UART_USB, UART_RECEIVE, onRxUartUSB, NULL);
+	uartCallbackSet(UART_USB, UART_TRANSMITER_FREE, onTx, NULL);
 	//habilito la interrupcion en el NVIC
 	uartInterrupt(UART_USB, true);
 
+	/* Inicializar la UART_232 */
+	uartConfig(UART_232, 115200);
+	uartCallbackSet(UART_232, UART_RECEIVE, uart232ReceiveCallback, NULL);
+	uartCallbackSet(UART_232, UART_TRANSMITER_FREE, uart232SendCallback, NULL);   
+	// Habilito todas las interrupciones de UART_232
+	uartInterrupt(UART_232, true);
+
 	/* Statechart Initialization */
-	uart_init(&statechart);
-	uart_enter(&statechart);
+	uart_8_init(&statechart);
+	uart_8_enter(&statechart);
 
 	while (1) {
 
 		// Si me llego una interrupción del uart
-		if(rxFlag) {
+		if(rxUartUSBFlag) {
 			// reseteo el flag
-			rxFlag = false;
+			rxUartUSBFlag = false;
 			// recibí data por uart
 			uartIface_raise_evUartRx(&statechart);
 			uartIface_set_viUartRx(&statechart, dato);
-			uart_runCycle(&statechart);
+		}
+
+		if(rxUART3Flag) {
+			rxUART3Flag = false;
+			uart_8Iface_raise_evUart3Rx(&statechart);
 		}
 
 
+		uart_8_runCycle(&statechart);
 	}
 }
 

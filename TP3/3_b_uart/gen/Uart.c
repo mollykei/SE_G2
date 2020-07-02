@@ -11,17 +11,26 @@
 #define SC_UNUSED(P) (void)(P)
 #endif
 /* prototypes of all internal functions */
-static void enact_main_region_UART_RX(Uart* handle);
-static void enseq_main_region_UART_RX_default(Uart* handle);
+static void enact_main_region_UART_USB_RX(Uart* handle);
+static void enact_main_region_UART3_RX(Uart* handle);
+static void enseq_main_region_IDLE_default(Uart* handle);
+static void enseq_main_region_UART_USB_RX_default(Uart* handle);
+static void enseq_main_region_UART3_RX_default(Uart* handle);
 static void enseq_main_region_default(Uart* handle);
-static void exseq_main_region_UART_RX(Uart* handle);
+static void exseq_main_region_IDLE(Uart* handle);
+static void exseq_main_region_UART_USB_RX(Uart* handle);
+static void exseq_main_region_UART3_RX(Uart* handle);
 static void exseq_main_region(Uart* handle);
 static void react_main_region__entry_Default(Uart* handle);
 static sc_boolean react(Uart* handle);
-static sc_boolean main_region_UART_RX_react(Uart* handle, const sc_boolean try_transition);
+static sc_boolean main_region_IDLE_react(Uart* handle, const sc_boolean try_transition);
+static sc_boolean main_region_UART_USB_RX_react(Uart* handle, const sc_boolean try_transition);
+static sc_boolean main_region_UART3_RX_react(Uart* handle, const sc_boolean try_transition);
 static void clearInEvents(Uart* handle);
 static void clearOutEvents(Uart* handle);
 
+const sc_integer UART_UARTIFACE_UARTUSB = 0;
+const sc_integer UART_UARTIFACE_UART3 = 1;
 
 void uart_init(Uart* handle)
 {
@@ -39,7 +48,7 @@ void uart_init(Uart* handle)
 	clearOutEvents(handle);
 	
 	/* Default init sequence for statechart uart */
-	handle->iface.viUartRx = 0;
+	handle->iface.viRxChar = 0;
 }
 
 void uart_enter(Uart* handle)
@@ -58,9 +67,19 @@ void uart_runCycle(Uart* handle)
 			
 		switch (handle->stateConfVector[handle->stateConfVectorPosition])
 		{
-		case Uart_main_region_UART_RX:
+		case Uart_main_region_IDLE:
 		{
-			main_region_UART_RX_react(handle, bool_true);
+			main_region_IDLE_react(handle, bool_true);
+			break;
+		}
+		case Uart_main_region_UART_USB_RX:
+		{
+			main_region_UART_USB_RX_react(handle, bool_true);
+			break;
+		}
+		case Uart_main_region_UART3_RX:
+		{
+			main_region_UART3_RX_react(handle, bool_true);
 			break;
 		}
 		default:
@@ -104,8 +123,16 @@ sc_boolean uart_isStateActive(const Uart* handle, UartStates state)
 	sc_boolean result = bool_false;
 	switch (state)
 	{
-		case Uart_main_region_UART_RX :
-			result = (sc_boolean) (handle->stateConfVector[SCVI_UART_MAIN_REGION_UART_RX] == Uart_main_region_UART_RX
+		case Uart_main_region_IDLE :
+			result = (sc_boolean) (handle->stateConfVector[SCVI_UART_MAIN_REGION_IDLE] == Uart_main_region_IDLE
+			);
+			break;
+		case Uart_main_region_UART_USB_RX :
+			result = (sc_boolean) (handle->stateConfVector[SCVI_UART_MAIN_REGION_UART_USB_RX] == Uart_main_region_UART_USB_RX
+			);
+			break;
+		case Uart_main_region_UART3_RX :
+			result = (sc_boolean) (handle->stateConfVector[SCVI_UART_MAIN_REGION_UART3_RX] == Uart_main_region_UART3_RX
 			);
 			break;
 		default:
@@ -117,7 +144,8 @@ sc_boolean uart_isStateActive(const Uart* handle, UartStates state)
 
 static void clearInEvents(Uart* handle)
 {
-	handle->iface.evUartRx_raised = bool_false;
+	handle->iface.evUartUsbRx_raised = bool_false;
+	handle->iface.evUart3Rx_raised = bool_false;
 }
 
 static void clearOutEvents(Uart* handle)
@@ -125,36 +153,77 @@ static void clearOutEvents(Uart* handle)
 	SC_UNUSED(handle);
 }
 
-void uartIface_raise_evUartRx(Uart* handle)
+void uartIface_raise_evUartUsbRx(Uart* handle)
 {
-	handle->iface.evUartRx_raised = bool_true;
+	handle->iface.evUartUsbRx_raised = bool_true;
+}
+void uartIface_raise_evUart3Rx(Uart* handle)
+{
+	handle->iface.evUart3Rx_raised = bool_true;
 }
 
 
-sc_integer uartIface_get_viUartRx(const Uart* handle)
+sc_integer uartIface_get_uARTUSB(const Uart* handle)
 {
-	return handle->iface.viUartRx;
+	SC_UNUSED(handle);
+	return UART_UARTIFACE_UARTUSB;
 }
-void uartIface_set_viUartRx(Uart* handle, sc_integer value)
+sc_integer uartIface_get_uART3(const Uart* handle)
 {
-	handle->iface.viUartRx = value;
+	SC_UNUSED(handle);
+	return UART_UARTIFACE_UART3;
+}
+sc_integer uartIface_get_viRxChar(const Uart* handle)
+{
+	return handle->iface.viRxChar;
+}
+void uartIface_set_viRxChar(Uart* handle, sc_integer value)
+{
+	handle->iface.viRxChar = value;
 }
 
 /* implementations of all internal functions */
 
-/* Entry action for state 'UART_RX'. */
-static void enact_main_region_UART_RX(Uart* handle)
+/* Entry action for state 'UART_USB_RX'. */
+static void enact_main_region_UART_USB_RX(Uart* handle)
 {
-	/* Entry action for state 'UART_RX'. */
-	uartIface_opLed(handle);
+	/* Entry action for state 'UART_USB_RX'. */
+	uartIface_opLed(handle, handle->iface.viRxChar, UART_UARTIFACE_UARTUSB);
+	uartIface_opTx(handle, handle->iface.viRxChar, UART_UARTIFACE_UART3);
 }
 
-/* 'default' enter sequence for state UART_RX */
-static void enseq_main_region_UART_RX_default(Uart* handle)
+/* Entry action for state 'UART3_RX'. */
+static void enact_main_region_UART3_RX(Uart* handle)
 {
-	/* 'default' enter sequence for state UART_RX */
-	enact_main_region_UART_RX(handle);
-	handle->stateConfVector[0] = Uart_main_region_UART_RX;
+	/* Entry action for state 'UART3_RX'. */
+	uartIface_opLed(handle, handle->iface.viRxChar, UART_UARTIFACE_UART3);
+	uartIface_opTx(handle, handle->iface.viRxChar, UART_UARTIFACE_UARTUSB);
+}
+
+/* 'default' enter sequence for state IDLE */
+static void enseq_main_region_IDLE_default(Uart* handle)
+{
+	/* 'default' enter sequence for state IDLE */
+	handle->stateConfVector[0] = Uart_main_region_IDLE;
+	handle->stateConfVectorPosition = 0;
+	SC_UNUSED(handle);
+}
+
+/* 'default' enter sequence for state UART_USB_RX */
+static void enseq_main_region_UART_USB_RX_default(Uart* handle)
+{
+	/* 'default' enter sequence for state UART_USB_RX */
+	enact_main_region_UART_USB_RX(handle);
+	handle->stateConfVector[0] = Uart_main_region_UART_USB_RX;
+	handle->stateConfVectorPosition = 0;
+}
+
+/* 'default' enter sequence for state UART3_RX */
+static void enseq_main_region_UART3_RX_default(Uart* handle)
+{
+	/* 'default' enter sequence for state UART3_RX */
+	enact_main_region_UART3_RX(handle);
+	handle->stateConfVector[0] = Uart_main_region_UART3_RX;
 	handle->stateConfVectorPosition = 0;
 }
 
@@ -165,10 +234,28 @@ static void enseq_main_region_default(Uart* handle)
 	react_main_region__entry_Default(handle);
 }
 
-/* Default exit sequence for state UART_RX */
-static void exseq_main_region_UART_RX(Uart* handle)
+/* Default exit sequence for state IDLE */
+static void exseq_main_region_IDLE(Uart* handle)
 {
-	/* Default exit sequence for state UART_RX */
+	/* Default exit sequence for state IDLE */
+	handle->stateConfVector[0] = Uart_last_state;
+	handle->stateConfVectorPosition = 0;
+	SC_UNUSED(handle);
+}
+
+/* Default exit sequence for state UART_USB_RX */
+static void exseq_main_region_UART_USB_RX(Uart* handle)
+{
+	/* Default exit sequence for state UART_USB_RX */
+	handle->stateConfVector[0] = Uart_last_state;
+	handle->stateConfVectorPosition = 0;
+	SC_UNUSED(handle);
+}
+
+/* Default exit sequence for state UART3_RX */
+static void exseq_main_region_UART3_RX(Uart* handle)
+{
+	/* Default exit sequence for state UART3_RX */
 	handle->stateConfVector[0] = Uart_last_state;
 	handle->stateConfVectorPosition = 0;
 	SC_UNUSED(handle);
@@ -181,9 +268,19 @@ static void exseq_main_region(Uart* handle)
 	/* Handle exit of all possible states (of uart.main_region) at position 0... */
 	switch(handle->stateConfVector[ 0 ])
 	{
-		case Uart_main_region_UART_RX :
+		case Uart_main_region_IDLE :
 		{
-			exseq_main_region_UART_RX(handle);
+			exseq_main_region_IDLE(handle);
+			break;
+		}
+		case Uart_main_region_UART_USB_RX :
+		{
+			exseq_main_region_UART_USB_RX(handle);
+			break;
+		}
+		case Uart_main_region_UART3_RX :
+		{
+			exseq_main_region_UART3_RX(handle);
 			break;
 		}
 		default: break;
@@ -194,7 +291,7 @@ static void exseq_main_region(Uart* handle)
 static void react_main_region__entry_Default(Uart* handle)
 {
 	/* Default react sequence for initial entry  */
-	enseq_main_region_UART_RX_default(handle);
+	enseq_main_region_IDLE_default(handle);
 }
 
 static sc_boolean react(Uart* handle) {
@@ -203,17 +300,57 @@ static sc_boolean react(Uart* handle) {
 	SC_UNUSED(handle);
 }
 
-static sc_boolean main_region_UART_RX_react(Uart* handle, const sc_boolean try_transition) {
-	/* The reactions of state UART_RX. */
+static sc_boolean main_region_IDLE_react(Uart* handle, const sc_boolean try_transition) {
+	/* The reactions of state IDLE. */
 	sc_boolean did_transition = try_transition;
 	if (try_transition == bool_true)
 	{ 
 		if ((react(handle)) == (bool_false))
 		{ 
-			if (handle->iface.evUartRx_raised == bool_true)
+			if (handle->iface.evUartUsbRx_raised == bool_true)
 			{ 
-				exseq_main_region_UART_RX(handle);
-				enseq_main_region_UART_RX_default(handle);
+				exseq_main_region_IDLE(handle);
+				enseq_main_region_UART_USB_RX_default(handle);
+			}  else
+			{
+				did_transition = bool_false;
+			}
+		} 
+	} 
+	return did_transition;
+}
+
+static sc_boolean main_region_UART_USB_RX_react(Uart* handle, const sc_boolean try_transition) {
+	/* The reactions of state UART_USB_RX. */
+	sc_boolean did_transition = try_transition;
+	if (try_transition == bool_true)
+	{ 
+		if ((react(handle)) == (bool_false))
+		{ 
+			if (handle->iface.evUart3Rx_raised == bool_true)
+			{ 
+				exseq_main_region_UART_USB_RX(handle);
+				enseq_main_region_UART3_RX_default(handle);
+			}  else
+			{
+				did_transition = bool_false;
+			}
+		} 
+	} 
+	return did_transition;
+}
+
+static sc_boolean main_region_UART3_RX_react(Uart* handle, const sc_boolean try_transition) {
+	/* The reactions of state UART3_RX. */
+	sc_boolean did_transition = try_transition;
+	if (try_transition == bool_true)
+	{ 
+		if ((react(handle)) == (bool_false))
+		{ 
+			if (handle->iface.evUartUsbRx_raised == bool_true)
+			{ 
+				exseq_main_region_UART3_RX(handle);
+				enseq_main_region_UART_USB_RX_default(handle);
 			}  else
 			{
 				did_transition = bool_false;
