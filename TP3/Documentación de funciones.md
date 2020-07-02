@@ -2,6 +2,7 @@
 
 
 
+
 ## TP3 - Documentación de funciones
 
 
@@ -140,6 +141,7 @@ void Chip_UART_Init(LPC_USART_T *pUART)
 
 Y luego setea el baudrate
 
+
 ```C
 /* Determines and sets best dividers to get a target bit rate */
 uint32_t Chip_UART_SetBaud(LPC_USART_T *pUART, uint32_t baudrate)
@@ -231,7 +233,7 @@ typedef struct {					/*!< USARTn Structure       */
 	__IO uint32_t TER2;				/*!< Transmit Enable Register. Only on LPC177X_8X UART4 and LPC18XX/43XX USART0/2/3. */
 } LPC_USART_T;
 ```
-
+---
 2. adcConfig( ADC_ENABLE );
 
 En `firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/src/sapi_adc.c` se encuentra la definición de `adcConfig`
@@ -341,7 +343,81 @@ void Chip_ADC_Init(LPC_ADC_T *pADC, ADC_CLOCK_SETUP_T *ADCSetup)
 	pADC->CR = cr;
 }
 ```
+En `firmware_v3/libs/lpc_open/lpc_chip_43xx/src` en `adc_18xx_43xx.c ` se encuentra la función `Chip_ADC_SetBurstCmd`:
 
+```C
+/* Enable burst mode */
+void Chip_ADC_SetBurstCmd(LPC_ADC_T *pADC, FunctionalState NewState)
+{
+	setStartMode(pADC, ADC_NO_START);
+
+    if (NewState == DISABLE) {
+		pADC->CR &= ~ADC_CR_BURST;
+	}
+	else {
+		pADC->CR |= ADC_CR_BURST;
+	}
+}
+```
+
+En `firmware_v3/libs/lpc_open/lpc_chip_43xx/src/adc_18xx_43xx.c`, también se encuentra la función `Chip_ADC_SetSampleRate`, `Chip_ADC_EnableChannel` y `Chip_ADC_Int_SetChannelCmd`:
+```C
+void Chip_ADC_SetSampleRate(LPC_ADC_T *pADC, ADC_CLOCK_SETUP_T *ADCSetup, uint32_t rate)
+{
+	uint8_t div;
+	uint32_t cr;
+
+	cr = pADC->CR & (~ADC_SAMPLE_RATE_CONFIG_MASK);
+	ADCSetup->adcRate = rate;
+	div = getClkDiv(pADC, ADCSetup->burstMode, rate, (11 - ADCSetup->bitsAccuracy));
+	cr |= ADC_CR_CLKDIV(div);
+	cr |= ADC_CR_BITACC(ADCSetup->bitsAccuracy);
+	pADC->CR = cr;
+}
+```
+
+```C
+/* Enable or disable the ADC channel on ADC peripheral */
+void Chip_ADC_EnableChannel(LPC_ADC_T *pADC, ADC_CHANNEL_T channel, FunctionalState NewState)
+{
+	if (NewState == ENABLE) {
+		pADC->CR |= ADC_CR_CH_SEL(channel);
+	}
+	else {
+		pADC->CR &= ~ADC_CR_START_MASK;
+		pADC->CR &= ~ADC_CR_CH_SEL(channel);
+	}
+}
+```
+
+```C
+/* Enable/Disable interrupt for ADC channel */
+void Chip_ADC_Int_SetChannelCmd(LPC_ADC_T *pADC, uint8_t channel, FunctionalState NewState)
+{
+	if (NewState == ENABLE) {
+		pADC->INTEN |= (1UL << channel);
+	}
+	else {
+		pADC->INTEN &= (~(1UL << channel));
+	}
+}
+```
+
+En la estructura `LPC_ADC_T` se ve la descripción de los registros que se usan en las funciones detalladas anteriormente:
+
+```C
+ * @brief 10 or 12-bit ADC register block structure
+ */
+typedef struct {					/*!< ADCn Structure */
+	__IO uint32_t CR;				/*!< A/D Control Register. The AD0CR register must be written to select the operating mode before A/D conversion can occur. */
+	__I  uint32_t GDR;				/*!< A/D Global Data Register. Contains the result of the most recent A/D conversion. */
+	__I  uint32_t RESERVED0;
+	__IO uint32_t INTEN;			/*!< A/D Interrupt Enable Register. This register contains enable bits that allow the DONE flag of each A/D channel to be included or excluded from contributing to the generation of an A/D interrupt. */
+	__I  uint32_t DR[8];			/*!< A/D Channel Data Register. This register contains the result of the most recent conversion completed on channel n. */
+	__I  uint32_t STAT;				/*!< A/D Status Register. This register contains DONE and OVERRUN flags for all of the A/D channels, as well as the A/D interrupt flag. */
+} LPC_ADC_T;
+```
+---
 3. dacConfig( DAC_ENABLE );
 
 En `firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/src/sapi_dac.c` se encuentra la definición de `dacConfig`
@@ -378,7 +454,50 @@ void dacInit( dacInit_t config )
    }
 }
 ```
+En `firmware_v3/libs/lpc_open/lpc_chip_43xx/src/clock_18xx_43xx.c` se encuentra la función `Chip_Clock_EnableOpts`:
 
+```C
+/* Enables a peripheral clock and sets clock states */
+void Chip_Clock_EnableOpts(CHIP_CCU_CLK_T clk, bool autoen, bool wakeupen, int div)
+{
+	uint32_t reg = 1;
+
+	if (autoen) {
+		reg |= (1 << 1);
+	}
+	if (wakeupen) {
+		reg |= (1 << 2);
+	}
+
+	/* Not all clocks support a divider, but we won't check that here. Only
+	   dividers of 1 and 2 are allowed. Assume 1 if not 2 */
+	if (div == 2) {
+		reg |= (1 << 5);
+	}
+
+	/* Setup peripheral clock and start running */
+	if (clk >= CLK_CCU2_START) {
+		LPC_CCU2->CLKCCU[clk - CLK_CCU2_START].CFG = reg;
+	}
+	else {
+		LPC_CCU1->CLKCCU[clk].CFG = reg;
+	}
+}
+```
+
+```C
+/* Set Maximum update rate for DAC */
+void Chip_DAC_SetBias(LPC_DAC_T *pDAC, uint32_t bias)
+{
+	pDAC->CR &= ~DAC_BIAS_EN;
+
+	if (bias  == DAC_MAX_UPDATE_RATE_400kHz) {
+		pDAC->CR |= DAC_BIAS_EN;
+	}
+}
+```
+
+---
 
 4. delayConfig( &delay, 500 );
 
@@ -395,7 +514,7 @@ void delayInit( delay_t * delay, tick_t duration )
    delay->running = 0;
 }
 ```
-
+---
 5. muestra = adcRead( CH1 );
 
 ```C
@@ -443,7 +562,7 @@ typedef enum {
 	#endif
 } adcMap_t;
 ```
-
+---
 6. uartReadByte( UART_USB, &dato )
 
 En `firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/src/sapi_uart.c` se encuentra la definición de `uartReadByte` :
@@ -461,7 +580,7 @@ bool_t uartReadByte( uartMap_t uart, uint8_t* receivedByte )
    return retVal;
 }
 ```
-
+---
 7. uartWriteByte( UART_USB, dato )
 
 ```C
@@ -483,6 +602,7 @@ void uartWriteString( uartMap_t uart, const char* str )
    }
 }
 ```
+---
 
 8. uartWriteString( UART_USB, "ADC CH1 value: " );
 
@@ -495,7 +615,7 @@ void uartWriteString( uartMap_t uart, const char* str )
    }
 }
 ```
-
+---
 9. dacWrite( DAC, muestra );
 
 ```C
@@ -523,7 +643,9 @@ typedef enum {
 	#endif
 } dacMap_t;
 ```
-
+---
 10. uartCallbackSet(UART_USB, UART_RECEIVE, onRx, NULL);
+
+---
 
 11. uartInterrupt(UART_USB, true);
