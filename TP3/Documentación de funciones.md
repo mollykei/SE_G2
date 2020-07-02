@@ -1,6 +1,7 @@
 
 
 
+
 ## TP3 - Documentación de funciones
 
 
@@ -233,7 +234,7 @@ typedef struct {					/*!< USARTn Structure       */
 
 2. adcConfig( ADC_ENABLE );
 
-En firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/src/sapi_adc.c se encuentra la definición de adcConfig
+En `firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/src/sapi_adc.c` se encuentra la definición de `adcConfig`
 
 
 ```C
@@ -314,6 +315,31 @@ En `firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/inc/sapi_adc.h` se define 
 typedef enum {
    ADC_ENABLE, ADC_DISABLE
 } adcInit_t;
+```
+
+Siguiendo con las funciones que se usan en la primitiva de `adcInit` se llega `Chip_ADC_Init` en `firmware_v3/libs/lpc_open/lpc_chip_43xx/src/adc_18xx_43xx.c`:
+
+```C
+void Chip_ADC_Init(LPC_ADC_T *pADC, ADC_CLOCK_SETUP_T *ADCSetup)
+{
+	uint8_t div;
+	uint32_t cr = 0;
+	uint32_t clk;
+
+	Chip_Clock_EnableOpts(Chip_ADC_GetClockIndex(pADC), true, true, 1);
+
+	pADC->INTEN = 0;		/* Disable all interrupts */
+
+	cr |= ADC_CR_PDN;
+	ADCSetup->adcRate = ADC_MAX_SAMPLE_RATE;
+	ADCSetup->bitsAccuracy = ADC_10BITS;
+	clk = 11;
+	ADCSetup->burstMode = false;
+	div = getClkDiv(pADC, false, ADCSetup->adcRate, clk);
+	cr |= ADC_CR_CLKDIV(div);
+	cr |= ADC_CR_BITACC(ADCSetup->bitsAccuracy);
+	pADC->CR = cr;
+}
 ```
 
 3. dacConfig( DAC_ENABLE );
@@ -398,10 +424,29 @@ uint16_t adcRead( adcMap_t analogInput )
    return analogValue;
 }
 ```
+ En `firmware_v3/libs/sapi/sapi_v0.5.2/board/inc/sapi_peripheral_map.h` se define `adcMap_t`:
+
+```
+/* Defined for sapi_adc.h */
+typedef enum {
+	#if (BOARD == ciaa_nxp)
+	   AI0 = 0, // AIN0 =   2 ADC0_1/ADC1_1
+	   AI1 = 1, // AIN1 = 143 ADC0_2/ADC1_2
+	   AI2 = 2, // AIN2 = 139 ADC0_3/ADC1_3
+	   AI3 = 3, // AIN3 = 138 ADC0_4/ADC1_4
+	#elif (BOARD == edu_ciaa_nxp)
+	   CH1 = 0, // CH1 =   2 ADC0_1/ADC1_1
+	   CH2 = 1, // CH2 = 143 ADC0_2/ADC1_2
+	   CH3 = 2, // CH3 = 139 ADC0_3/ADC1_3
+	#else
+	   #error BOARD not supported yet!
+	#endif
+} adcMap_t;
+```
 
 6. uartReadByte( UART_USB, &dato )
 
-En
+En `firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/src/sapi_uart.c` se encuentra la definición de `uartReadByte` :
 
 ```C
 // Read 1 byte from RX FIFO, check first if exist aviable data
