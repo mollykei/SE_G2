@@ -710,6 +710,9 @@ tick_t tickRateMS = 1; // Used by delay!!! Default 1ms
 ---
 5. muestra = adcRead( CH1 );
 
+En `firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/src/sapi_adc.c` se encuentra la definición de `adcRead`
+
+
 ```C
 uint16_t adcRead( adcMap_t analogInput )
 {
@@ -736,6 +739,30 @@ uint16_t adcRead( adcMap_t analogInput )
    return analogValue;
 }
 ```
+
+En `firmware_v3/libs/lpc_open/lpc_chip_43xx/inc/adc_18xx_43xx.h` se define también:
+
+```
+/**
+ * @brief	Select the mode starting the AD conversion
+ * @param	pADC		: The base of ADC peripheral on the chip
+ * @param	mode		: Stating mode, should be :
+ *							- ADC_NO_START				: Must be set for Burst mode
+ *							- ADC_START_NOW				: Start conversion now
+ *							- ADC_START_ON_CTOUT15		: Start conversion when the edge selected by bit 27 occurs on CTOUT_15
+ *							- ADC_START_ON_CTOUT8		: Start conversion when the edge selected by bit 27 occurs on CTOUT_8
+ *							- ADC_START_ON_ADCTRIG0		: Start conversion when the edge selected by bit 27 occurs on ADCTRIG0
+ *							- ADC_START_ON_ADCTRIG1		: Start conversion when the edge selected by bit 27 occurs on ADCTRIG1
+ *							- ADC_START_ON_MCOA2		: Start conversion when the edge selected by bit 27 occurs on Motocon PWM output MCOA2
+ * @param	EdgeOption	: Stating Edge Condition, should be :
+ *							- ADC_TRIGGERMODE_RISING	: Trigger event on rising edge
+ *							- ADC_TRIGGERMODE_FALLING	: Trigger event on falling edge
+ * @return	Nothing
+ */
+void Chip_ADC_SetStartMode(LPC_ADC_T *pADC, ADC_START_MODE_T mode, ADC_EDGE_CFG_T EdgeOption);
+```
+
+
  En `firmware_v3/libs/sapi/sapi_v0.5.2/board/inc/sapi_peripheral_map.h` se define `adcMap_t`:
 
 ```
@@ -755,7 +782,101 @@ typedef enum {
 	#endif
 } adcMap_t;
 ```
+Y se vuelve a llamar a las funciones `Chip_ADC_EnableChannel` y `Chip_ADC_EnableChannel` que se describieron en el punto `2.`, donde se expliaca la primitiva de  `adcConfig`.
+
+Además, en la primitiva `adcRead` se llama a las siguientes funciones:
+
+En `firmware_v3/libs/lpc_open/lpc_chip_43xx/src/adc_18xx_43xx.c` se define `Chip_ADC_SetStartMode`
+
+```
+/* Select the mode starting the AD conversion */
+void Chip_ADC_SetStartMode(LPC_ADC_T *pADC, ADC_START_MODE_T mode, ADC_EDGE_CFG_T EdgeOption)
+{
+	if ((mode != ADC_START_NOW) && (mode != ADC_NO_START)) {
+		if (EdgeOption) {
+			pADC->CR |= ADC_CR_EDGE;
+		}
+		else {
+			pADC->CR &= ~ADC_CR_EDGE;
+		}
+	}
+	setStartMode(pADC, (uint8_t) mode);
+}
+```
+La estructura de registros `LPC_ADC_T` es la misma que se muestra en el punto `2.` donde se define `adcConfig` y las estructuras `ADC_START_MODE_T` y `ADC_EDGE_CFG_T` que se definen en `firmware_v3/libs/lpc_open/lpc_chip_43xx/inc/adc_18xx_43xx.h`:
+
+```
+/** Start mode, which controls the start of an A/D conversion when the BURST bit is 0. */
+typedef enum CHIP_ADC_START_MODE {
+	ADC_NO_START = 0,
+	ADC_START_NOW,			/*!< Start conversion now */
+	ADC_START_ON_CTOUT15,	/*!< Start conversion when the edge selected by bit 27 occurs on CTOUT_15 */
+	ADC_START_ON_CTOUT8,	/*!< Start conversion when the edge selected by bit 27 occurs on CTOUT_8 */
+	ADC_START_ON_ADCTRIG0,	/*!< Start conversion when the edge selected by bit 27 occurs on ADCTRIG0 */
+	ADC_START_ON_ADCTRIG1,	/*!< Start conversion when the edge selected by bit 27 occurs on ADCTRIG1 */
+	ADC_START_ON_MCOA2		/*!< Start conversion when the edge selected by bit 27 occurs on Motocon PWM output MCOA2 */
+} ADC_START_MODE_T;
+```
+```
+/** Edge configuration, which controls rising or falling edge on the selected signal for the start of a conversion */
+typedef enum CHIP_ADC_EDGE_CFG {
+	ADC_TRIGGERMODE_RISING = 0,		/**< Trigger event: rising edge */
+	ADC_TRIGGERMODE_FALLING,		/**< Trigger event: falling edge */
+} ADC_EDGE_CFG_T;
+```
+En `firmware_v3/libs/lpc_open/lpc_chip_43xx/src/adc_18xx_43xx.c` se define `Chip_ADC_ReadStatus` y `Chip_ADC_ReadValue`:
+
+
+```
+/* Get ADC Channel status from ADC data register */
+FlagStatus Chip_ADC_ReadStatus(LPC_ADC_T *pADC, uint8_t channel, uint32_t StatusType)
+{
+	switch (StatusType) {
+	case ADC_DR_DONE_STAT:
+		return (pADC->STAT & (1UL << channel)) ? SET : RESET;
+
+	case ADC_DR_OVERRUN_STAT:
+		channel += 8;
+		return (pADC->STAT & (1UL << channel)) ? SET : RESET;
+
+	case ADC_DR_ADINT_STAT:
+		return pADC->STAT >> 16 ? SET : RESET;
+
+	default:
+		break;
+	}
+	return RESET;
+}
+```
+
+```
+/* Get the ADC value */
+Status Chip_ADC_ReadValue(LPC_ADC_T *pADC, uint8_t channel, uint16_t *data)
+{
+	return readAdcVal(pADC, channel, data);
+}
+```
+
+y luego se define `readAdcVal`:
+
+```
+/* Get the ADC value */
+Status readAdcVal(LPC_ADC_T *pADC, uint8_t channel, uint16_t *data)
+{
+	uint32_t temp;
+	temp = pADC->DR[channel];
+	if (!ADC_DR_DONE(temp)) {
+		return ERROR;
+	}
+	/*	if(ADC_DR_OVERRUN(temp) && (pADC->CR & ADC_CR_BURST)) */
+	/*	return ERROR; */
+	*data = (uint16_t) ADC_DR_RESULT(temp);
+	return SUCCESS;
+}
+```
+
 ---
+
 6. uartReadByte( UART_USB, &dato )
 
 En `firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/src/sapi_uart.c` se encuentra la definición de `uartReadByte` :
