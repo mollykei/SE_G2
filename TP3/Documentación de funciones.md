@@ -564,7 +564,7 @@ Los resgitros `CR`, `CTRL` y `CNTVAL`, se definen en la estructura `LPC_DAC_T` e
 
 ```
 /**
- * @brief DAC register block structure
+ */ @brief DAC register block structure
  */
 typedef struct {			/*!< DAC Structure          */
 	__IO uint32_t  CR;		/*!< DAC register. Holds the conversion data. */
@@ -573,7 +573,7 @@ typedef struct {			/*!< DAC Structure          */
 } LPC_DAC_T;
 ```
 
-En las funciones que se encuentran en `firmware_v3/libs/lpc_open/lpc_chip_43xx/src/clock_18xx_43xx.c` tambien se usa una llama a una estructura con registros del clocks `CHIP_CCU_CLK_T` que se define en `firmware_v3/libs/lpc_open/lpc_chip_43xx/inc/chip_clocks.h `
+En las funciones que se encuentran en `firmware_v3/libs/lpc_open/lpc_chip_43xx/src/clock_18xx_43xx.c` se utiliza una estructura con registros del clock `CHIP_CCU_CLK_T`. Dicha estructura se define en `firmware_v3/libs/lpc_open/lpc_chip_43xx/inc/chip_clocks.h `
 ```
 typedef enum CHIP_CCU_CLK {
 	/* CCU1 clocks */
@@ -686,6 +686,26 @@ void delayInit( delay_t * delay, tick_t duration )
    delay->duration = duration/tickRateMS;
    delay->running = 0;
 }
+```
+Las estructuras `delay_t` y `tick_t` se definen en `firmware_v3/libs/sapi/sapi_v0.5.2/abstract_modules/inc/sapi_delay.h ` y `firmware_v3/libs/sapi/sapi_v0.5.2/base/inc/sapi_datatypes.h` respectivamente:
+
+```
+typedef struct{
+   tick_t startTime;
+   tick_t duration;
+   bool_t running;
+} delay_t;
+```
+```
+/* Define Tick Data Type */
+typedef uint64_t tick_t;
+```
+
+Además en la función `delayInit` se usa la variable `tickRateMS`, que se define en `firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/src/sapi_tick.c`:
+
+```
+tick_t tickRateMS = 1; // Used by delay!!! Default 1ms
+
 ```
 ---
 5. muestra = adcRead( CH1 );
