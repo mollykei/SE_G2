@@ -401,7 +401,7 @@ void Chip_ADC_Int_SetChannelCmd(LPC_ADC_T *pADC, uint8_t channel, FunctionalStat
 En la estructura `LPC_ADC_T` se ve la descripción de los registros que se usan en las funciones detalladas anteriormente:
 
 ```C
- * @brief 10 or 12-bit ADC register block structure
+ */ @brief 10 or 12-bit ADC register block structure
  */
 typedef struct {					/*!< ADCn Structure */
 	__IO uint32_t CR;				/*!< A/D Control Register. The AD0CR register must be written to select the operating mode before A/D conversion can occur. */
