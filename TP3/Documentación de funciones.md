@@ -1,8 +1,3 @@
-
-
-
-
-
 ## TP3 - Documentación de funciones
 
 
@@ -1078,6 +1073,8 @@ void uartWriteString( uartMap_t uart, const char* str )
 ---
 9. dacWrite( DAC, muestra );
 
+En `firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/src/sapi_uart.c` se define la primitiva `dacWrite`:
+
 ```C
 void dacWrite( dacMap_t analogOutput, uint16_t value )
 {
@@ -1089,6 +1086,9 @@ void dacWrite( dacMap_t analogOutput, uint16_t value )
    }
 }
 ```
+
+En la estructura `dacMap_t` se determina cual es la placa que se está utilizando, para mapera los registros, en este caso `DAC` y `DAC0`:
+
 ```C
 /* Defined for sapi_dac.h */
 typedef enum {
@@ -1103,6 +1103,38 @@ typedef enum {
 	#endif
 } dacMap_t;
 ```
+
+La función `Chip_DAC_UpdateValue` que se llama para actualizar el valor de salida, se define en `firmware_v3/libs/lpc_open/lpc_chip_43xx/src/dac_18xx_43xx.c` :
+
+```C
+/* Update value to DAC buffer*/
+void Chip_DAC_UpdateValue(LPC_DAC_T *pDAC, uint32_t dac_value)
+{
+	uint32_t tmp;
+
+	tmp = pDAC->CR & DAC_BIAS_EN;
+	tmp |= DAC_VALUE(dac_value);
+	/* Update value */
+	pDAC->CR = tmp;
+}
+```
+
+
+En `firmware_v3/libs/lpc_open/lpc_chip_43xx/inc/dac_18xx_43xx.h` se definen `DAC_VALUE` y `DAC_BIAS_EN`:
+
+```C
+/** After the selected settling time after this field is written with a
+   new VALUE, the voltage on the AOUT pin (with respect to VSSA)
+   is VALUE/1024 ? VREF */
+#define DAC_VALUE(n)        ((uint32_t) ((n & 0x3FF) << 6))
+/** If this bit = 0: The settling time of the DAC is 1 microsecond max,
+ * and the maximum current is 700 microAmpere
+ * If this bit = 1: The settling time of the DAC is 2.5 microsecond
+ * and the maximum current is 350 microAmpere
+ */
+#define DAC_BIAS_EN         ((uint32_t) (1 << 16))
+```
+
 ---
 
 10. uartCallbackSet(UART_USB, UART_RECEIVE, onRx, NULL);
