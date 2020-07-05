@@ -644,8 +644,98 @@ typedef enum {
 } dacMap_t;
 ```
 ---
+
 10. uartCallbackSet(UART_USB, UART_RECEIVE, onRx, NULL);
+
+En `firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/src/sapi_uart.c` se encuentra la definición de `uartCallbackSet`:
+
+```C
+// UART Interrupt event Enable and set a callback
+void uartCallbackSet( uartMap_t uart, uartEvents_t event,
+                      callBackFuncPtr_t callbackFunc, void* callbackParam )
+{   
+   uint32_t intMask;
+
+   switch(event){
+
+      case UART_RECEIVE:
+         // Enable UART Receiver Buffer Register Interrupt
+         //intMask = UART_IER_RBRINT;
+
+         // Enable UART Receiver Buffer Register Interrupt and Enable UART line
+         //status interrupt. LPC43xx User manual page 1118
+         intMask = UART_IER_RBRINT | UART_IER_RLSINT;
+
+         if( callbackFunc != 0 ) {
+            // Set callback
+            if( (uart == UART_GPIO) || (uart == UART_485) ){
+               rxIsrCallbackUART0 = callbackFunc;
+               rxIsrCallbackUART0Params = callbackParam;
+            }
+            if( (uart == UART_USB) || (uart == UART_ENET) ){
+               rxIsrCallbackUART2 = callbackFunc;
+               rxIsrCallbackUART2Params = callbackParam;
+            }            
+            if( uart == UART_232 ){
+               rxIsrCallbackUART3 = callbackFunc;
+               rxIsrCallbackUART3Params = callbackParam;
+            }
+         } else{
+            return;
+         }
+      break;
+
+      case UART_TRANSMITER_FREE:
+         // Enable THRE irq (TX)
+         intMask = UART_IER_THREINT;
+
+         if( callbackFunc != 0 ) {
+
+            // Set callback
+            if( (uart == UART_GPIO) || (uart == UART_485) ){
+               txIsrCallbackUART0 = callbackFunc;
+               txIsrCallbackUART0Params = callbackParam;
+            }
+            if( (uart == UART_USB) || (uart == UART_ENET) ){
+               txIsrCallbackUART2 = callbackFunc;
+               txIsrCallbackUART2Params = callbackParam;
+            }            
+            if( uart == UART_232 ){
+               txIsrCallbackUART3 = callbackFunc;
+               txIsrCallbackUART3Params = callbackParam;
+            }
+         } else{
+            return;
+         }
+      break;
+
+      default:
+         return;
+   }
+
+   // Enable UART Interrupt
+   Chip_UART_IntEnable(lpcUarts[uart].uartAddr, intMask);
+}
+```
 
 ---
 
 11. uartInterrupt(UART_USB, true);
+
+En `firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/src/sapi_uart.c` se encuentra la definición de `uartInterrupt`:
+
+```C
+// UART Global Interrupt Enable/Disable
+void uartInterrupt( uartMap_t uart, bool_t enable )
+{
+   if( enable ) {
+      // Interrupt Priority for UART channel
+      NVIC_SetPriority( lpcUarts[uart].uartIrqAddr, 5 ); // FreeRTOS Requiere prioridad >= 5 (numero mas alto, mas baja prioridad)
+      // Enable Interrupt for UART channel
+      NVIC_EnableIRQ( lpcUarts[uart].uartIrqAddr );
+   } else {
+      // Disable Interrupt for UART channel
+      NVIC_DisableIRQ( lpcUarts[uart].uartIrqAddr );
+   }
+}
+```
