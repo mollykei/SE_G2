@@ -161,7 +161,7 @@ uint32_t Chip_UART_SetBaud(LPC_USART_T *pUART, uint32_t baudrate)
 }
 ```
 
-También se habilita la trasnmisión en el pin Tx en `/firmware_v3/libs/lpc_open/lpc_chip_43xx/inc/uart_18xx_43xx.h ` y se describen los registros que se utilizan, como `TER2`, `ÌER`:
+También se habilita la trasnmisión en el pin Tx en `/firmware_v3/libs/lpc_open/lpc_chip_43xx/inc/uart_18xx_43xx.h` y se describen los registros que se utilizan, como `TER2`, `ÌER`:
 
 ```C
 /**
@@ -1208,6 +1208,32 @@ void uartCallbackSet( uartMap_t uart, uartEvents_t event,
    // Enable UART Interrupt
    Chip_UART_IntEnable(lpcUarts[uart].uartAddr, intMask);
 }
+```
+
+La estructura `uartEvents_t` se define en `firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/inc/sapi_uart.h`:
+
+```C
+typedef enum{
+   UART_RECEIVE,
+   UART_TRANSMITER_FREE
+} uartEvents_t;
+```
+Los registros `UART_IER_RBRINT` y `UART_IER_RLSINT` , están definidos en `/firmware_v3/libs/lpc_open/lpc_chip_43xx/inc/uart_18xx_43xx.h`:
+
+```
+/**
+ * @brief Macro defines for UART Interrupt Enable Register
+ */
+#define UART_IER_RBRINT      (1 << 0)	/*!< RBR Interrupt enable */
+#define UART_IER_THREINT     (1 << 1)	/*!< THR Interrupt enable */
+#define UART_IER_RLSINT      (1 << 2)	/*!< RX line status interrupt enable */
+#define UART_IER_MSINT       (1 << 3)	/*!< Modem status interrupt enable - valid for 11xx, 17xx/40xx UART1, 18xx/43xx UART1  only */
+#define UART_IER_CTSINT      (1 << 7)	/*!< CTS signal transition interrupt enable - valid for 17xx/40xx UART1, 18xx/43xx UART1 only */
+#define UART_IER_ABEOINT     (1 << 8)	/*!< Enables the end of auto-baud interrupt */
+#define UART_IER_ABTOINT     (1 << 9)	/*!< Enables the auto-baud time-out interrupt */
+#define UART_IER_BITMASK     (0x307)	/*!< UART interrupt enable register bit mask  - valid for 13xx, 17xx/40xx UART0/2/3, 18xx/43xx UART0/2/3 only*/
+#define UART1_IER_BITMASK    (0x30F)	/*!< UART1 interrupt enable register bit mask - valid for 11xx only */
+#define UART2_IER_BITMASK    (0x38F)	/*!< UART2 interrupt enable register bit mask - valid for 17xx/40xx UART1, 18xx/43xx UART1 only */
 ```
 
 ---
