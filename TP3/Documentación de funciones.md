@@ -1060,6 +1060,10 @@ typedef struct {					/*!< USARTn Structure       */
 
 8. uartWriteString( UART_USB, "ADC CH1 value: " );
 
+En `firmware_v3/libs/sapi/sapi_v0.5.2/soc/peripherals/src/sapi_uart.c`  se define la primitiva `uartWriteString`:
+
+Que llama a la función `uartWriteByte` que es la definida en el punto `7.`, mientras la variable `str` contenga algo:
+
 ```C
 void uartWriteString( uartMap_t uart, const char* str )
 {
@@ -1069,6 +1073,8 @@ void uartWriteString( uartMap_t uart, const char* str )
    }
 }
 ```
+
+
 ---
 9. dacWrite( DAC, muestra );
 
