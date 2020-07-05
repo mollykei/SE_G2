@@ -485,6 +485,8 @@ void Chip_Clock_EnableOpts(CHIP_CCU_CLK_T clk, bool autoen, bool wakeupen, int d
 }
 ```
 
+En `firmware_v3/libs/lpc_open/lpc_chip_43xx/src/dac_18xx_43xx.c` se encuentra la función `Chip_DAC_SetBias`:
+
 ```C
 /* Set Maximum update rate for DAC */
 void Chip_DAC_SetBias(LPC_DAC_T *pDAC, uint32_t bias)
@@ -497,6 +499,79 @@ void Chip_DAC_SetBias(LPC_DAC_T *pDAC, uint32_t bias)
 }
 ```
 
+En `firmware_v3/libs/lpc_open/lpc_chip_43xx/inc/dac_18xx_43xx.h` se encuentra la definición de `firmware_v3/libs/lpc_open/lpc_chip_43xx/inc$ ls dac_18xx_43xx.h`:
+
+```C
+/**
+ * @brief	Enables the DMA operation and controls DMA timer
+ * @param	pDAC		: pointer to LPC_DAC_T
+ * @param	dacFlags	: An Or'ed value of the following DAC values:
+ *                  - DAC_DBLBUF_ENA :enable/disable DACR double buffering feature
+ *                  - DAC_CNT_ENA    :enable/disable timer out counter
+ *                  - DAC_DMA_ENA    :enable/disable DMA access
+ * @return	Nothing
+ * @note	Pass an Or'ed value of the DAC flags to enable those options.
+ */
+STATIC INLINE void Chip_DAC_ConfigDAConverterControl(LPC_DAC_T *pDAC, uint32_t dacFlags)
+{
+	uint32_t temp;
+
+	temp = pDAC->CTRL & ~DAC_DACCTRL_MASK;
+	pDAC->CTRL = temp | dacFlags;
+}
+```
+
+En `firmware_v3/libs/lpc_open/lpc_chip_43xx/src/dac_18xx_43xx.c` se encuentra la función `Chip_DAC_UpdateValue`:
+
+```C
+/* Update value to DAC buffer*/
+void Chip_DAC_UpdateValue(LPC_DAC_T *pDAC, uint32_t dac_value)
+{
+	uint32_t tmp;
+
+	tmp = pDAC->CR & DAC_BIAS_EN;
+	tmp |= DAC_VALUE(dac_value);
+	/* Update value */
+	pDAC->CR = tmp;
+}
+```
+En `firmware_v3/libs/lpc_open/lpc_chip_43xx/src/dac_18xx_43xx.c` se encuentra la función `Chip_DAC_DeInit`:
+
+```C
+/* Shutdown DAC peripheral */
+void Chip_DAC_DeInit(LPC_DAC_T *pDAC)
+{
+	Chip_Clock_Disable(CLK_APB3_DAC);
+}
+```
+En `firmware_v3/libs/lpc_open/lpc_chip_43xx/src/clock_18xx_43xx.c` se encuentra la función `Chip_Clock_Disable`:
+
+```C
+/* Disables a peripheral clock */
+void Chip_Clock_Disable(CHIP_CCU_CLK_T clk)
+{
+	/* Stop peripheral clock */
+	if (clk >= CLK_CCU2_START) {
+		LPC_CCU2->CLKCCU[clk - CLK_CCU2_START].CFG &= ~1;
+	}
+	else {
+		LPC_CCU1->CLKCCU[clk].CFG &= ~1;
+	}
+}
+```
+
+Los resgitros `CR`, `CTRL` y `CNTVAL`, se definen en la estructura `LPC_DAC_T` en `/firmware_v3/libs/lpc_open/lpc_chip_43xx/inc/dac_18xx_43xx.h`
+
+```
+/**
+ * @brief DAC register block structure
+ */
+typedef struct {			/*!< DAC Structure          */
+	__IO uint32_t  CR;		/*!< DAC register. Holds the conversion data. */
+	__IO uint32_t  CTRL;	/*!< DAC control register.  */
+	__IO uint32_t  CNTVAL;	/*!< DAC counter value register. */
+} LPC_DAC_T;
+```
 ---
 
 4. delayConfig( &delay, 500 );
