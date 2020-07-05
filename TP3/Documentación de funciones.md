@@ -894,6 +894,7 @@ bool_t uartReadByte( uartMap_t uart, uint8_t* receivedByte )
    return retVal;
 }
 ```
+La estructura `uartMap_t` se describe en el punto `6.` cuando se explicó la primitiva `uartConfig`.
 ---
 7. uartWriteByte( UART_USB, dato )
 
