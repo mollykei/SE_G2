@@ -4,7 +4,7 @@
 
 [Ejercicio 1 ](https://github.com/mollykei/SE_G2/blob/master/TP3/Documentaci%C3%B3n%20de%20funciones.md)
 
-[Ejercicio 2]
+[Ejercicio 2](https://github.com/mollykei/SE_G2/tree/master/TP3/2)
 
 [Ejercicio 3](https://github.com/mollykei/SE_G2/tree/master/TP3/3_a_uart)
 
