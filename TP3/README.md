@@ -6,10 +6,12 @@
 
 [Ejercicio 2]
 
-[Ejercicio 3]
+[Ejercicio 3](https://github.com/mollykei/SE_G2/tree/master/TP3/3_a_uart)
 
-[Ejercicio 4]
+[Ejercicio 4](https://github.com/mollykei/SE_G2/tree/tp3_iglesias/TP3/punto4_rgb_led_uart)
 
 [Ejercicios 5 y 6](https://github.com/nachocarballeda/embebidos_fiuba/wiki/TP3-ej-5-y-6)
 
-[Ejercicio 7 y 8]
+[Ejercicio 7](https://github.com/mollykei/SE_G2/tree/tp3_iglesias/TP3/punto7_button2Led)
+
+[Ejercicio 8](https://github.com/mollykei/SE_G2/tree/master/TP3/8_uart)
