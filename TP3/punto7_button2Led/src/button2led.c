@@ -7,7 +7,6 @@
 int main( void ) {
 
 	inicializar_plataforma();
-	inicializar_buttonState();
 
 	// De examples/c/sapi/finite_state_machine/fsm_debounce/fsm_deb_debounce_gtoggle
 	delay_t actualizar_boton;
@@ -15,6 +14,17 @@ int main( void ) {
 
 	// al agregar el bool quito la logica de rising y falling.
 	bool_t transicion = FALSE;
+
+
+	my_ButtonState_t button_state_tecla_1;
+	my_ButtonState_t button_state_tecla_2;
+	my_ButtonState_t button_state_tecla_3;
+	my_ButtonState_t button_state_tecla_4;
+
+	button_state_tecla_1 = my_ButtonInit();
+	button_state_tecla_2 = my_ButtonInit();
+	button_state_tecla_3 = my_ButtonInit();
+	button_state_tecla_4 = my_ButtonInit();
 
 	while(TRUE) {
 
@@ -42,12 +52,6 @@ int main( void ) {
 	         }
 
 	      }
-
-
-
-
-
-
 	   }
 
 	return 0;
@@ -65,20 +69,6 @@ void inicializar_plataforma() {
 	uartCallbackSet(UART_232, UART_RECEIVE, onRx, NULL);
 	uartInterrupt(UART_232, true);
 }
-
-void inicializar_buttonState() {
-
-	my_ButtonState_t button_state_tecla_1;
-	my_ButtonState_t button_state_tecla_2;
-	my_ButtonState_t button_state_tecla_3;
-	my_ButtonState_t button_state_tecla_4;
-
-	button_state_tecla_1 = buttonInit();
-	button_state_tecla_2 = buttonInit();
-	button_state_tecla_3 = buttonInit();
-	button_state_tecla_4 = buttonInit();
-}
-
 
 // de examples/c/sapi/uart/rx_interrupt
 void onRx(void* noUsado) {
@@ -100,7 +90,7 @@ void onRx(void* noUsado) {
 }
 
 //de sapi_print.hc
-void my_PrintChar(gpioMap_t tecla, ButtonState_t ButtonState){
+void my_PrintChar(gpioMap_t tecla, my_ButtonState_t buttonState){
 
 	switch (tecla){
 
@@ -125,7 +115,7 @@ void my_PrintChar(gpioMap_t tecla, ButtonState_t ButtonState){
 			break;
 
 		default:
-			stdioPrintf("Error. \n");
+			printf("Error. \n");
 			break;
 	}
 }

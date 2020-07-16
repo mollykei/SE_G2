@@ -7,12 +7,12 @@
 
 my_ButtonState_t buttonState;
 
-void my_ButtonError( void )
+my_ButtonState_t my_ButtonError( void )
 {
 	buttonState = BUTTON_UP;
 }
 
-void my_ButtonInit( void )
+my_ButtonState_t my_ButtonInit( void )
 {
 	buttonState = BUTTON_UP;
 }

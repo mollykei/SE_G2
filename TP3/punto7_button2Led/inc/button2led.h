@@ -13,9 +13,8 @@
 #include "my_debounce.h"
 
 void inicializar_plataforma();
-void inicializar_buttonState();
-
-
+void onRx(void* noUsado);
+void my_PrintChar(gpioMap_t tecla, my_ButtonState_t buttonState);
 
 
 #endif /* EXAMPLES_C_PROJECTS_TP3_PUNTO7_BUTTON2LED_INC_BUTTON2LED_H_ */

@@ -22,8 +22,8 @@ typedef enum{
    STATE_BUTTON_RISING
 } my_ButtonState_t;
 
-void my_ButtonError( void );
-void my_ButtonInit( void );
+my_ButtonState_t my_ButtonError( void );
+my_ButtonState_t my_ButtonInit( void );
 void my_ButtonUpdate( my_gpio_map_t tecla, bool_t *transicion );
 
 #ifdef __cplusplus
